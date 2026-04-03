@@ -1,0 +1,82 @@
+-- [[ YUTA HUB V1.5 - BLOX FRUITS - FULL ENGLISH VERSION ]]
+-- [[ THEME: AQUA BLUE & WHITE ]]
+
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+
+local Window = Fluent:CreateWindow({
+    Title = "YUTA HUB", 
+    SubTitle = "V1.5 : Blox Fruits",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = true,
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl
+})
+
+-- Set Theme to Aqua Blue
+Fluent:SetTheme("Aqua") 
+
+-- Ninja/Assassin Icon for YUTA
+Window:SetIcon("rbxassetid://15270275525")
+
+local Tabs = {
+    Main = Window:AddTab({ Title = "Information", Icon = "info" }),
+    Farm = Window:AddTab({ Title = "Auto Farm", Icon = "swords" }),
+    Sea = Window:AddTab({ Title = "Sea Events", Icon = "waves" }),
+    Items = Window:AddTab({ Title = "Items Farm", Icon = "package" }),
+    Status = Window:AddTab({ Title = "Status", Icon = "activity" }),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
+}
+
+-- 1. INFORMATION TAB
+Tabs.Main:AddParagraph({
+    Title = "User: YUTA",
+    Content = "Welcome to YUTA HUB Premium Edition.\nEnjoy your hunting!"
+})
+
+-- 2. AUTO FARM (Like Banana Hub)
+Tabs.Farm:AddSection("Level Farm")
+Tabs.Farm:AddToggle("AutoFarm", {Title = "Auto Farm Level", Default = false})
+Tabs.Farm:AddToggle("AutoBone", {Title = "Auto Farm Bone (Third Sea)", Default = false})
+
+Tabs.Farm:AddSection("Melee Farm")
+Tabs.Farm:AddToggle("AutoMastery", {Title = "Auto Melee Mastery", Default = false})
+
+-- 3. SEA EVENTS (Like the screenshots you sent)
+Tabs.Sea:AddSection("Leviathan Event")
+Tabs.Sea:AddToggle("SpyLevi", {Title = "Auto Spy Leviathan", Default = false})
+Tabs.Sea:AddButton({
+    Title = "Teleport to Frozen Dimension",
+    Callback = function() print("Teleporting...") end
+})
+
+-- 4. ITEMS FARM (Tushita, Yama, etc.)
+Tabs.Items:AddSection("Legendary Swords")
+Tabs.Items:AddToggle("Tushita", {Title = "Auto Tushita Quest", Default = false})
+Tabs.Items:AddToggle("Yama", {Title = "Auto Yama Quest", Default = false})
+
+-- 5. SETTINGS (Toggle Menu & Anti-Kick)
+Tabs.Settings:AddSection("Menu Config")
+Tabs.Settings:AddButton({
+    Title = "Minimize Menu",
+    Callback = function() Window:Minimize() end
+})
+
+Tabs.Settings:AddToggle("AntiAFK", {Title = "Anti-AFK System", Default = true})
+:OnChanged(function(Value)
+    if Value then
+        local vu = game:GetService("VirtualUser")
+        game:GetService("Players").LocalPlayer.Idled:Connect(function()
+            vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+            task.wait(1)
+            vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+        end)
+    end
+end)
+
+Window:SelectTab(1)
+Fluent:Notify({
+    Title = "YUTA HUB",
+    Content = "English Version Loaded Successfully!",
+    Duration = 5
+})
