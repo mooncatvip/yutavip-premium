@@ -1,0 +1,97 @@
+-- [[ YUTA HUB v27.0 - THE DEFINITIVE BANANA RECODE ]]
+-- [[ 1:1 RATIO - RED THEME - SHUFFLED TABS ]]
+
+local YutaHub = Instance.new("ScreenGui", game.CoreGui)
+local Main = Instance.new("Frame", YutaHub)
+local Sidebar = Instance.new("Frame", Main)
+local SearchBar = Instance.new("TextBox", Sidebar)
+local Page = Instance.new("ScrollingFrame", Main)
+local Title = Instance.new("TextLabel", Main)
+
+-- 1. COPY KHUNG CHÍNH BANANA
+Main.Name = "YutaHub_v27"
+Main.Size = UDim2.new(0, 520, 0, 310)
+Main.Position = UDim2.new(0.5, -260, 0.5, -155)
+Main.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+Main.BackgroundTransparency = 0.2
+Main.BorderSizePixel = 0
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 5)
+local Stroke = Instance.new("UIStroke", Main)
+Stroke.Color = Color3.fromRGB(255, 0, 0) -- Đổi sang Đỏ
+Stroke.Thickness = 1.2
+
+-- 2. TIÊU ĐỀ (CHỈ ĐỔI TÊN)
+Title.Size = UDim2.new(1, 0, 0, 35)
+Title.Text = "YUTA HUB : Blox Fruits" 
+Title.TextColor3 = Color3.fromRGB(255, 0, 0)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 16
+Title.BackgroundTransparency = 1
+
+-- 3. SIDEBAR & SEARCH (COPY VỊ TRÍ)
+Sidebar.Size = UDim2.new(0, 140, 1, -45)
+Sidebar.Position = UDim2.new(0, 10, 0, 40)
+Sidebar.BackgroundTransparency = 1
+
+SearchBar.Size = UDim2.new(1, -5, 0, 25)
+SearchBar.PlaceholderText = "Search section or fu..."
+SearchBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+SearchBar.TextColor3 = Color3.fromRGB(200, 200, 200)
+Instance.new("UICorner", SearchBar).CornerRadius = UDim.new(0, 4)
+
+-- 4. TẠO TAB (XÁO TRỘN THỨ TỰ)
+local function AddTab(name, pos, active)
+    local Tab = Instance.new("TextButton", Sidebar)
+    Tab.Size = UDim2.new(1, 0, 0, 30)
+    Tab.Position = UDim2.new(0, 0, 0, (pos-1)*32 + 35)
+    Tab.BackgroundTransparency = 1
+    Tab.Text = "  " .. name
+    Tab.TextColor3 = active and Color3.fromRGB(255, 0, 0) or Color3.fromRGB(180, 180, 180)
+    Tab.Font = Enum.Font.SourceSansBold
+    Tab.TextSize = 14
+    Tab.TextXAlignment = Enum.TextXAlignment.Left
+    
+    if active then -- Vạch vàng biến thành vạch đỏ
+        local Line = Instance.new("Frame", Tab)
+        Line.Size = UDim2.new(0, 2, 0, 15)
+        Line.Position = UDim2.new(0, 0, 0.5, -7)
+        Line.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    end
+end
+
+AddTab("Sea Events", 1, true)
+AddTab("Drago Dojo", 2, false)
+AddTab("Mirage + RaceV4", 3, false)
+AddTab("Items Farm", 4, false)
+AddTab("Config", 5, false)
+
+-- 5. PAGE & CHECKBOX (COPY Y HỆT BANANA)
+Page.Size = UDim2.new(1, -165, 1, -50)
+Page.Position = UDim2.new(0, 155, 0, 40)
+Page.BackgroundTransparency = 1
+Page.ScrollBarThickness = 0
+
+local function AddToggle(text)
+    local Frame = Instance.new("Frame", Page)
+    Frame.Size = UDim2.new(1, 0, 0, 40)
+    Frame.BackgroundTransparency = 1
+    
+    local Label = Instance.new("TextLabel", Frame)
+    Label.Size = UDim2.new(1, -40, 1, 0)
+    Label.Text = text
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.Font = Enum.Font.SourceSansBold
+    Label.TextSize = 14
+    Label.TextXAlignment = Enum.TextXAlignment.Left
+    Label.BackgroundTransparency = 1
+    
+    local Box = Instance.new("Frame", Frame) -- Ô Checkbox
+    Box.Size = UDim2.new(0, 18, 0, 18)
+    Box.Position = UDim2.new(1, -25, 0.5, -9)
+    Box.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    local BStroke = Instance.new("UIStroke", Box)
+    BStroke.Color = Color3.fromRGB(255, 0, 0) -- Viền Đỏ
+end
+
+AddToggle("Auto Sea Events")
+AddToggle("Auto Collect Chest")
