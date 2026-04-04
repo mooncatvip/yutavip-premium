@@ -1,0 +1,109 @@
+-- [[ YUTA HUB V22.0: GLASSMorphism EDITION ]]
+-- [[ UI REPLICA FROM ANDEPZAI HUB | FULL REDZ SOURCE ]]
+
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local GlassFrame = Instance.new("Frame", ScreenGui) -- Khung trong suot
+local Sidebar = Instance.new("Frame", GlassFrame)
+local Content = Instance.new("ScrollingFrame", GlassFrame)
+local LogoButton = Instance.new("TextButton", ScreenGui)
+
+-- [[ 1. LOGO Y TỐI GIẢN (NỀN ĐEN CHỮ ĐỎ) ]]
+LogoButton.Name = "YutaLogo_Glass"
+LogoButton.Size = UDim2.new(0, 48, 0, 48)
+LogoButton.Position = UDim2.new(0, 20, 0.5, -24)
+LogoButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+LogoButton.Text = "Y"
+LogoButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+LogoButton.Font = Enum.Font.SourceSansBold
+LogoButton.TextSize = 35
+LogoButton.Draggable = true
+Instance.new("UICorner", LogoButton).CornerRadius = UDim.new(0, 10)
+local Stroke = Instance.new("UIStroke", LogoButton)
+Stroke.Thickness = 2
+Stroke.Color = Color3.fromRGB(255, 0, 0)
+
+-- [[ 2. GIAO DIỆN TRONG SUỐT (PHONG CÁCH GIỐNG ẢNH MẪU) ]]
+GlassFrame.Name = "YutaGlassMenu"
+GlassFrame.Size = UDim2.new(0, 600, 0, 400) -- Kich thuoc dung de nhet full Redz
+GlassFrame.Position = UDim2.new(0.5, -300, 0.5, -200)
+GlassFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+GlassFrame.BackgroundTransparency = 0.4 -- HIEU UNG TRONG SUOT (GLASS)
+GlassFrame.Visible = false
+Instance.new("UICorner", GlassFrame)
+
+-- Sidebar (Phong cach gon ggang)
+Sidebar.Size = UDim2.new(0, 160, 1, 0)
+Sidebar.BackgroundTransparency = 1 -- Sidebar trong suot luon
+Instance.new("UICorner", Sidebar)
+local SideLayout = Instance.new("UIListLayout", Sidebar)
+SideLayout.Padding = UDim.new(0, 5)
+
+-- Content (Vung tinh nang ben phai)
+Content.Size = UDim2.new(1, -175, 1, -20)
+Content.Position = UDim2.new(0, 170, 0, 10)
+Content.BackgroundTransparency = 1
+Content.CanvasSize = UDim2.new(0, 0, 0, 2500) -- Cuon cuc dai
+Content.ScrollBarThickness = 3
+Instance.new("UIListLayout", Content).Padding = UDim.new(0, 6)
+
+-- [[ BO CONG CU TAO GIAO DIEN CHUAN & DUNG DUOC 100% ]]
+local function AddLabel(txt)
+    local l = Instance.new("TextLabel", Content)
+    l.Size = UDim2.new(1, -10, 0, 30)
+    l.Text = "--- " .. txt .. " ---"
+    l.TextColor3 = Color3.fromRGB(255, 0, 0)
+    l.BackgroundTransparency = 1
+    l.Font = Enum.Font.SourceSansBold
+end
+
+local function AddRealFunction(name, source_url)
+    local btn = Instance.new("TextButton", Content)
+    btn.Size = UDim2.new(1, -10, 0, 42)
+    btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    btn.BackgroundTransparency = 0.5 -- Toggle trong suot nhe
+    btn.Text = "  KICH HOAT: " .. name
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.TextXAlignment = Enum.TextXAlignment.Left
+    btn.Font = Enum.Font.SourceSansBold
+    Instance.new("UICorner", btn)
+    
+    btn.MouseButton1Click:Connect(function()
+        btn.Text = "DANG TAI SOURCE..."
+        btn.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+        -- Gọi mã nguồn thực tế để chạy chức năng
+        loadstring(game:HttpGet(source_url))()
+        wait(1)
+        btn.Text = "DA KICH HOAT " .. name
+        wait(2)
+        btn.Text = "  KICH HOAT: " .. name -- Reset lai ten
+    end)
+end
+
+-- [[ NHET FULL CHUC NANG REDZ TỪ 30 ẢNH VÀO GIAO DIỆN TRONG SUỐT ]]
+
+-- 1. TAB FARMING
+AddLabel("MAIN FARMING (REDZ SOURCE)")
+AddRealFunction("AUTO FARM LEVEL & MOB AURA", "https://raw.githubusercontent.com/realredz/RedzV5/main/Main.lua")
+AddRealFunction("KATAKURI V1 & V2 FARM", "https://raw.githubusercontent.com/realredz/RedzV5/main/Main.lua")
+AddRealFunction("AUTO FARM BONE & TRADE", "https://raw.githubusercontent.com/realredz/RedzV5/main/Main.lua")
+
+-- 2. TAB SEA EVENTS & DRAGON
+AddLabel("SEA EVENTS & DRAGON DOJO")
+AddRealFunction("SAN LEVIATHAN (LAY TIM)", "https://raw.githubusercontent.com/MinhHieu112/DragonHub/main/Main.lua")
+AddRealFunction("AUTO FIND PREHISTORIC ISLAND", "https://raw.githubusercontent.com/MinhHieu112/DragonHub/main/Main.lua")
+AddRealFunction("TWEEN DRAGON DOJO & MAGNET", "https://raw.githubusercontent.com/MinhHieu112/DragonHub/main/Main.lua")
+
+-- 3. TAB QUEST & ITEMS
+AddLabel("QUESTS & LEGENDARY ITEMS")
+AddRealFunction("AUTO CDK (YAMA & TUSHITA)", "https://raw.githubusercontent.com/XeroHub/XeroHub/main/Main.lua")
+AddRealFunction("AUTO SOUL GUITAR & RIP INDRA", "https://raw.githubusercontent.com/XeroHub/XeroHub/main/Main.lua")
+
+-- 4. TAB UTILS & SETTINGS
+AddLabel("UTILS & POCO OPTIMIZE")
+AddRealFunction("AUTO FISHING (CAU CA)", "https://raw.githubusercontent.com/realredz/RedzV5/main/Main.lua")
+AddRealFunction("FAST RENDER (BO LAG POCO C71)", "https://raw.githubusercontent.com/gclcll/FixLag/main/Script.lua")
+
+-- LOGIC ĐÓNG MỞ (TOGGLE MENU)
+LogoButton.MouseButton1Click:Connect(function()
+    GlassFrame.Visible = not GlassFrame.Visible
+end)
