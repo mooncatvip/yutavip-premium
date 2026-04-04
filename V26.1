@@ -1,0 +1,45 @@
+-- [[ YUTA HUB v26.1 - CLEAN REBRAND ]]
+-- [[ NO USELESS LOGOS - NO FAKE UI ]]
+
+-- 1. CHẠY SOURCE GỐC ĐỂ LẤY FULL CHỨC NĂNG FARM
+loadstring(game:HttpGet("https://raw.githubusercontent.com/aloaloalo322/sssdas/refs/heads/main/cc"))()
+
+-- 2. DÙNG VÒNG LẶP SIÊU TỐC ĐỂ ÉP THAY ĐỔI GIAO DIỆN GỐC
+task.spawn(function()
+    while task.wait(0.1) do -- Kiểm tra liên tục để script gốc không đổi màu lại được
+        for _, v in pairs(game.CoreGui:GetDescendants()) do
+            
+            -- ĐỔI TÊN TIÊU ĐỀ SANG TIẾNG ANH & YUTA HUB
+            if v:IsA("TextLabel") or v:IsA("TextButton") then
+                if v.Text:find("BANANA") or v.Text:find("Cat") or v.Text:find("Hub") then
+                    v.Text = "YUTA HUB v26.1"
+                    v.TextColor3 = Color3.fromRGB(255, 0, 0) -- Chữ Đỏ
+                end
+                
+                -- Việt hóa/Anh hóa các nút bấm quan trọng
+                if v.Text == "Tập kích" then v.Text = "Auto Raid" end
+                if v.Text == "Cấu hình" then v.Text = "Config" end
+                if v.Text == "Săn Leviathan" then v.Text = "Leviathan Hunter" end
+            end
+            
+            -- ĐỔI MÀU TOÀN BỘ SANG ĐỎ - TRẮNG
+            if v:IsA("Frame") or v:IsA("ScrollingFrame") then
+                -- Đổi các thanh Highlight màu Vàng/Xanh sang Đỏ
+                if v.BackgroundColor3 == Color3.fromRGB(255, 255, 0) or v.BackgroundColor3 == Color3.fromRGB(0, 255, 255) then
+                    v.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+                end
+                
+                -- Đổi nền tối (Dark) sang nền Trắng (White)
+                if v.BackgroundColor3 == Color3.fromRGB(30, 30, 30) or v.BackgroundColor3 == Color3.fromRGB(25, 25, 25) then
+                    v.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    v.BackgroundTransparency = 0.1
+                end
+            end
+
+            -- Đổi màu các đường kẻ viền (UIStroke) sang Đỏ
+            if v:IsA("UIStroke") then
+                v.Color = Color3.fromRGB(255, 0, 0)
+            end
+        end
+    end
+end)
