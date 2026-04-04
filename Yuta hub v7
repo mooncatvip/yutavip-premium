@@ -1,0 +1,84 @@
+-- [[ YUTA HUB V7.0: NO EMOJI EDITION ]]
+-- [[ SYSTEM: ENGLISH | DISPLAY: VIETNAMESE ]]
+
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local MainFrame = Instance.new("Frame", ScreenGui)
+local ToggleButton = Instance.new("TextButton", ScreenGui)
+
+-- [[ 1. NINJA LOGO TOGGLE ]]
+ToggleButton.Name = "YutaLogo"
+ToggleButton.Size = UDim2.new(0, 60, 0, 60)
+ToggleButton.Position = UDim2.new(0, 20, 0.5, -30)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+ToggleButton.Text = "NINJA" -- Bo het emoji theo yeu cau
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.Font = Enum.Font.SourceSansBold
+ToggleButton.TextSize = 14
+Instance.new("UICorner", ToggleButton).CornerRadius = UDim.new(0, 10)
+local Stroke = Instance.new("UIStroke", ToggleButton)
+Stroke.Thickness = 2
+Stroke.Color = Color3.fromRGB(130, 100, 255)
+
+-- [[ 2. MAIN MENU DESIGN ]]
+MainFrame.Name = "YutaMenu"
+MainFrame.Size = UDim2.new(0, 500, 0, 400)
+MainFrame.Position = UDim2.new(0.5, -250, 0.5, -200)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+MainFrame.Visible = false
+Instance.new("UICorner", MainFrame)
+
+local Content = Instance.new("ScrollingFrame", MainFrame)
+Content.Size = UDim2.new(1, -20, 1, -20)
+Content.Position = UDim2.new(0, 10, 0, 10)
+Content.BackgroundTransparency = 1
+Content.CanvasSize = UDim2.new(0, 0, 18, 0)
+local ContentLayout = Instance.new("UIListLayout", Content)
+ContentLayout.Padding = UDim.new(0, 5)
+
+-- [[ FUNCTION: TAO CONG TAC TIENG VIET ]]
+local function AddToggle(txt, callback)
+    local state = false
+    local b = Instance.new("TextButton", Content)
+    b.Size = UDim2.new(1, -10, 0, 45)
+    b.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    b.Text = "  [ OFF ]  " .. txt
+    b.TextXAlignment = Enum.TextXAlignment.Left
+    b.TextColor3 = Color3.fromRGB(255, 255, 255)
+    b.Font = Enum.Font.SourceSansBold
+    Instance.new("UICorner", b)
+
+    b.MouseButton1Click:Connect(function()
+        state = not state
+        callback(state)
+        if state then
+            b.Text = "  [ ON ]  " .. txt
+            b.BackgroundColor3 = Color3.fromRGB(130, 100, 255)
+        else
+            b.Text = "  [ OFF ]  " .. txt
+            b.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+        end
+    end)
+end
+
+-- [[ TONG HOP TINH NANG CHO YUTA ]]
+AddToggle("TU DONG CAY CAP", function(s) _G.AutoFarm = s end)
+AddToggle("DANH NHANH", function(s) _G.FastAttack = s end)
+AddToggle("TU DONG DUNG CHIEU Z,X,C,V", function(s) _G.AutoSkill = s end)
+AddToggle("GOM QUAI DEN GAN", function(s) _G.BringMob = s end)
+AddToggle("SAN LEVIATHAN LAY TIM", function(s) _G.HuntLevi = s end)
+AddToggle("CAY FULL DO RONG", function(s) _G.DragonGear = s end)
+AddToggle("TIM DAO B I AN / DAO RONG", function(s) _G.FindIsland = s end)
+AddToggle("HIEN VI TRI TRAI AC QUY", function(s) _G.FruitESP = s end)
+AddToggle("TU DONG RANDOM VA CAT TRAI", function(s) _G.AutoGacha = s end)
+AddToggle("TU DONG NANG DIEM", function(s) _G.AutoStats = s end)
+AddToggle("TOI UU GIAM LAG POCO", function(s) 
+    if s then 
+        for _,v in pairs(game:GetDescendants()) do
+            if v:IsA("BasePart") then v.Material = "Plastic" end
+            if v:IsA("Decal") then v:Destroy() end
+        end
+    end 
+end)
+AddToggle("TREO MAY TIET KIEM PIN", function(s) end)
+
+ToggleButton.MouseButton1Click:Connect(function() MainFrame.Visible = not MainFrame.Visible end)
