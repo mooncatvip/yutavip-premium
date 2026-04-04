@@ -1,0 +1,147 @@
+-- [[ YUTA HUB v27.5 - KRNL ANIMATION STYLE ]]
+-- [[ LAYOUT: VERTICAL | LOGO: BOTTOM-LEFT | ANIMATION: SCALE & FADE ]]
+
+local TweenService = game:GetService("TweenService")
+local YutaHub = Instance.new("ScreenGui")
+local MainContainer = Instance.new("Frame") 
+local LogoToggle = Instance.new("ImageButton") 
+
+YutaHub.Name = "YutaHub_V27_5"
+YutaHub.Parent = game.CoreGui
+YutaHub.ResetOnSpawn = false
+
+-- 1. KHUNG CHỮ NHẬT ĐỨNG (BO GÓC 15PX)
+MainContainer.Name = "VerticalMenu"
+MainContainer.Parent = YutaHub
+MainContainer.Size = UDim2.new(0, 280, 0, 480) 
+MainContainer.Position = UDim2.new(0.5, -140, 0.5, -240)
+MainContainer.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+MainContainer.BackgroundTransparency = 0.1
+MainContainer.ClipsDescendants = true
+MainContainer.Visible = false -- Mặc định ẩn để chạy hiệu ứng
+Instance.new("UICorner", MainContainer).CornerRadius = UDim.new(0, 15)
+local Stroke = Instance.new("UIStroke", MainContainer)
+Stroke.Color = Color3.fromRGB(255, 0, 0)
+Stroke.Thickness = 2
+
+-- 2. LOGO BẬT/TẮT Ở GÓC TRÁI DƯỚI
+LogoToggle.Name = "Yuta_Logo_Toggle"
+LogoToggle.Parent = YutaHub
+LogoToggle.Size = UDim2.new(0, 45, 0, 45)
+LogoToggle.Position = UDim2.new(0, 20, 1, -65) 
+LogoToggle.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+LogoToggle.Image = "rbxassetid://161234567" --
+Instance.new("UICorner", LogoToggle).CornerRadius = UDim.new(1, 0)
+local LStroke = Instance.new("UIStroke", LogoToggle)
+LStroke.Color = Color3.fromRGB(255, 0, 0)
+
+-- 3. HIỆU ỨNG CHUYỂN ĐỘNG KIỂU KRNL (TWEEN)
+local isOpen = false
+local function ToggleMenu()
+    isOpen = not isOpen
+    
+    if isOpen then
+        MainContainer.Visible = true
+        MainContainer.Size = UDim2.new(0, 0, 0, 0) -- Bắt đầu từ 0
+        MainContainer.BackgroundTransparency = 1
+        
+        -- Phóng to và hiện rõ dần
+        TweenService:Create(MainContainer, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0, 280, 0, 480),
+            BackgroundTransparency = 0.1
+        }):Play()
+    else
+        -- Thu nhỏ và biến mất
+        local closeTween = TweenService:Create(MainContainer, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
+            Size = UDim2.new(0, 0, 0, 0),
+            BackgroundTransparency = 1
+        })
+        closeTween:Play()
+        closeTween.Completed:Connect(function()
+            if not isOpen then MainContainer.Visible = false end
+        end)
+    end
+end
+
+LogoToggle.MouseButton1Click:Connect(ToggleMenu)
+
+-- 4. NỘI DUNG MENU (GIỮ NGUYÊN COLLAB CỦA CHÚNG TA)
+local Title = Instance.new("TextLabel", MainContainer)
+Title.Size = UDim2.new(1, 0, 0, 45)
+Title.Text = "YUTA HUB v27.5"
+Title.TextColor3 = Color3.fromRGB(255, 0, 0)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 18
+Title.BackgroundTransparency = 1
+
+local Sidebar = Instance.new("Frame", MainContainer)
+Sidebar.Position = UDim2.new(0, 8, 0, 50)
+Sidebar.Size = UDim2.new(0, 85, 1, -60)
+Sidebar.BackgroundTransparency = 1
+Instance.new("UIListLayout", Sidebar).Padding = UDim.new(0, 5)
+
+local PageContainer = Instance.new("Frame", MainContainer)
+PageContainer.Position = UDim2.new(0, 100, 0, 50)
+PageContainer.Size = UDim2.new(1, -110, 1, -60)
+PageContainer.BackgroundTransparency = 1
+
+local Pages = {}
+local function AddTab(name)
+    local P = Instance.new("ScrollingFrame", PageContainer)
+    P.Name = name
+    P.Size = UDim2.new(1, 0, 1, 0)
+    P.Visible = false
+    P.BackgroundTransparency = 1
+    P.ScrollBarThickness = 0
+    Instance.new("UIListLayout", P).Padding = UDim.new(0, 5)
+    
+    local TabBtn = Instance.new("TextButton", Sidebar)
+    TabBtn.Size = UDim2.new(1, 0, 0, 32)
+    TabBtn.Text = name
+    TabBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
+    TabBtn.Font = Enum.Font.SourceSansBold
+    TabBtn.BackgroundTransparency = 1
+
+    TabBtn.MouseButton1Click:Connect(function()
+        for _, v in pairs(Pages) do v.Visible = false end
+        P.Visible = true
+        for _, t in pairs(Sidebar:GetChildren()) do
+            if t:IsA("TextButton") then t.TextColor3 = Color3.fromRGB(150, 150, 150) end
+        end
+        TabBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
+    end)
+    Pages[name] = P
+    return P
+end
+
+-- SETUP MUSIC & DRAGON JOURNEY
+local DragonTab = AddTab("Dragon")
+local MusicTab = AddTab("Music")
+
+local function AddToggle(parent, text)
+    local Frame = Instance.new("TextButton", parent)
+    Frame.Size = UDim2.new(1, 0, 0, 38)
+    Frame.BackgroundTransparency = 1
+    Frame.Text = ""
+    local Label = Instance.new("TextLabel", Frame)
+    Label.Size = UDim2.new(1, -25, 1, 0)
+    Label.Text = text
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.BackgroundTransparency = 1
+    local Box = Instance.new("Frame", Frame)
+    Box.Size = UDim2.new(0, 18, 0, 18)
+    Box.Position = UDim2.new(1, -22, 0.5, -9)
+    Box.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Instance.new("UIStroke", Box).Color = Color3.fromRGB(255, 0, 0)
+    Instance.new("UICorner", Box).CornerRadius = UDim.new(0, 5)
+    local state = false
+    Frame.MouseButton1Click:Connect(function()
+        state = not state
+        Box.BackgroundColor3 = state and Color3.fromRGB(255, 0, 0) or Color3.fromRGB(30, 30, 30)
+    end)
+end
+
+AddToggle(DragonTab, "Auto Mirage")
+AddToggle(MusicTab, "Super Hero 2018") -- Bài đề cử của YUTA
+
+DragonTab.Visible = true
