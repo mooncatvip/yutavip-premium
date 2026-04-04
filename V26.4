@@ -1,0 +1,57 @@
+-- [[ YUTA HUB v26.4 - CLEAN LAUNCHER ]]
+-- [[ NO MORE LAGGING - RED & WHITE THEME ]]
+
+-- 1. TẠO GIAO DIỆN CHẠY SCRIPT (SIÊU NHẸ)
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local MainFrame = Instance.new("Frame", ScreenGui) -- Main panel
+local Title = Instance.new("TextLabel", MainFrame) -- "YUTA HUB v26.4"
+local StatusLabel = Instance.new("TextLabel", MainFrame) -- Status message
+
+-- Cấu hình Main Frame (Nền Trắng Viền Đỏ)
+MainFrame.Name = "YutaLauncher"
+MainFrame.Size = UDim2.new(0, 300, 0, 150)
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -75) -- Center of screen
+MainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- Pure White
+MainFrame.BorderSizePixel = 0
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 12)
+local MainStroke = Instance.new("UIStroke", MainFrame)
+MainStroke.Color = Color3.fromRGB(255, 0, 0) -- Pure Red Border
+MainStroke.Thickness = 2.5
+
+-- Cấu hình Title (English - YUTA HUB)
+Title.Parent = MainFrame
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.Position = UDim2.new(0, 0, 0, 10)
+Title.Text = "YUTA HUB v26.4"
+Title.TextColor3 = Color3.fromRGB(255, 0, 0) -- Pure Red Text
+Title.Font = Enum.Font.SourceSansBold
+Title.TextSize = 25
+Title.BackgroundTransparency = 1
+
+-- Cấu hình Status Label (English)
+StatusLabel.Parent = MainFrame
+StatusLabel.Size = UDim2.new(1, 0, 0, 30)
+StatusLabel.Position = UDim2.new(0, 0, 0.5, 0)
+StatusLabel.Text = "Wait for Core to load..." -- Waiting message
+StatusLabel.TextColor3 = Color3.fromRGB(200, 0, 0) -- Darker Red
+StatusLabel.Font = Enum.Font.SourceSansBold
+StatusLabel.TextSize = 18
+StatusLabel.BackgroundTransparency = 1
+
+-- 2. TỰ ĐỘNG CHẠY SCRIPT TRONG LINK VÀ TỰ BIẾN MẤT
+task.spawn(function()
+    StatusLabel.Text = "Connecting..." -- Connection status
+    local Success, Error = pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/aloaloalo322/sssdas/refs/heads/main/cc"))()
+    end)
+    
+    if Success then
+        StatusLabel.Text = "ACTIVE!" -- Status
+        StatusLabel.TextColor3 = Color3.fromRGB(0, 200, 0) -- Green for active
+        task.wait(2)
+        ScreenGui:Destroy() -- Biến mất luôn cho sạch màn hình
+    else
+        StatusLabel.Text = "ERROR: Try Again" -- Error message
+        print("Yuta Hub Error: "..Error)
+    end
+end)
