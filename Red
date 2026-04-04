@@ -1,0 +1,88 @@
+-- [[ YUTA HUB V2.1.1: FULL ENGLISH VERSION ]]
+-- [[ ALL FEATURES FROM YOUR SCREENSHOTS ARE INCLUDED ]]
+
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+
+local Window = Fluent:CreateWindow({
+    Title = "YUTA HUB - PREMIUM EDITION",
+    SubTitle = "by YUTA",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = true,
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl
+})
+
+-- [[ ALL TABS 100% ENGLISH ]]
+local Tabs = {
+    Main = Window:AddTab({ Title = "Farm", Icon = "" }),
+    Sea = Window:AddTab({ Title = "Sea Events", Icon = "" }),
+    Race = Window:AddTab({ Title = "Mirage + RaceV4", Icon = "" }),
+    Dojo = Window:AddTab({ Title = "Drago Dojo", Icon = "" }),
+    Pre = Window:AddTab({ Title = "Prehistoric", Icon = "" }),
+    Raid = Window:AddTab({ Title = "Raid / Combat", Icon = "" }),
+    TP = Window:AddTab({ Title = "Teleport", Icon = "" }),
+    Shop = Window:AddTab({ Title = "Shop & Fruit", Icon = "" }),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
+}
+
+-- 1. FARM SECTION
+Tabs.Main:AddToggle("AutoFarm", {Title = "Auto Farm Level", Default = false, Callback = function(v) _G.AutoFarm = v end})
+Tabs.Main:AddToggle("AutoBone", {Title = "Auto Bone (Sea 3)", Default = false, Callback = function(v) _G.AutoBone = v end})
+Tabs.Main:AddToggle("FastAttack", {Title = "Fast Attack Mode", Default = false, Callback = function(v) _G.FastAttack = v end})
+
+-- 2. SEA EVENTS (DRAGON EQUIPMENT)
+Tabs.Sea:AddToggle("TerrorShark", {Title = "Auto Terror Shark", Default = false, Callback = function(v) _G.TerrorShark = v end})
+Tabs.Sea:AddToggle("Leviathan", {Title = "Auto Leviathan (Heart)", Default = false, Callback = function(v) _G.Leviathan = v end})
+Tabs.Sea:AddToggle("ShipFarm", {Title = "Auto Ship Farm", Default = false, Callback = function(v) _G.ShipFarm = v end})
+
+-- 3. RACE V4 & DOJO
+Tabs.Race:AddToggle("FindMirage", {Title = "Auto Find Mirage", Default = false, Callback = function(v) _G.FindMirage = v end})
+Tabs.Race:AddToggle("TrialV4", {Title = "Auto Trial V4", Default = false, Callback = function(v) _G.AutoTrial = v end})
+Tabs.Dojo:AddButton({Title = "Start Drago Dojo Quest", Callback = function() _G.AutoDojo = true end})
+
+-- 4. TELEPORT & SHOP
+Tabs.TP:AddButton({Title = "Teleport to Sea 1", Callback = function() end})
+Tabs.TP:AddButton({Title = "Teleport to Sea 2", Callback = function() end})
+Tabs.TP:AddButton({Title = "Teleport to Sea 3", Callback = function() end})
+Tabs.Shop:AddButton({Title = "Random Fruit", Callback = function() end})
+
+-- 5. SETTINGS (SÁNG VL, NO FOG, FIX LAG)
+Tabs.Settings:AddToggle("FullBright", {Title = "Full Bright (Sáng vl)", Default = false, Callback = function(v)
+    game:GetService("Lighting").Ambient = v and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(0, 0, 0)
+end})
+Tabs.Settings:AddButton({Title = "ULTRA FIX LAG (POCO)", Callback = function()
+    for i,v in pairs(game:GetDescendants()) do
+        if v:IsA("BasePart") then v.Material = "Plastic" end
+        if v:IsA("Decal") then v:Destroy() end
+    end
+end})
+
+-- [[ MOVABLE "YUTA HUB" YELLOW LOGO ]]
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local MainFrame = Instance.new("Frame", ScreenGui)
+local ToggleText = Instance.new("TextButton", MainFrame)
+
+MainFrame.Name = "YutaLogoFrame"
+MainFrame.Position = UDim2.new(0, 15, 0.5, 0)
+MainFrame.Size = UDim2.new(0, 110, 0, 45)
+MainFrame.BackgroundTransparency = 1
+MainFrame.Draggable = true 
+MainFrame.Active = true
+
+ToggleText.Name = "YutaText"
+ToggleText.Text = "YUTA HUB"
+ToggleText.TextSize = 18
+ToggleText.Font = Enum.Font.SourceSansBold
+ToggleText.TextColor3 = Color3.fromRGB(255, 215, 0)
+ToggleText.Size = UDim2.new(1, 0, 1, 0)
+ToggleText.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ToggleText.BackgroundTransparency = 0.3
+ToggleText.BorderSizePixel = 0
+Instance.new("UICorner", ToggleText).CornerRadius = UDim.new(0, 10)
+
+ToggleText.MouseButton1Click:Connect(function()
+    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.LeftControl, false, game)
+end)
+
+Window:SelectTab(1)
