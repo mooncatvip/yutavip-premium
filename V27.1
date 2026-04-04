@@ -1,0 +1,133 @@
+-- [[ YUTA HUB v27.0 - A TO Z REPLICA ]]
+-- [[ ALL TABS AND FUNCTIONS SORTED ALPHABETICALLY ]]
+
+local YutaHub = Instance.new("ScreenGui", game.CoreGui)
+local Main = Instance.new("Frame", YutaHub)
+local Sidebar = Instance.new("Frame", Main)
+local Divider = Instance.new("Frame", Main)
+local SearchBar = Instance.new("TextBox", Sidebar)
+local Page = Instance.new("ScrollingFrame", Main)
+local Title = Instance.new("TextLabel", Main)
+
+-- 1. HỆ THỐNG KÉO THẢ (DRAGGABLE)
+local UserInputService = game:GetService("UserInputService")
+local dragging, dragInput, dragStart, startPos
+local function update(input)
+    local delta = input.Position - dragStart
+    Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+Main.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true dragStart = input.Position startPos = Main.Position
+        input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end)
+    end
+end)
+Main.InputChanged:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then dragInput = input end end)
+UserInputService.InputChanged:Connect(function(input) if input == dragInput and dragging then update(input) end end)
+
+-- 2. KHUNG CHÍNH (BANANA STYLE)
+Main.Name = "YutaV27_AZ"
+Main.Size = UDim2.new(0, 520, 0, 310)
+Main.Position = UDim2.new(0.5, -260, 0.5, -155)
+Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Main.BackgroundTransparency = 0.2
+Main.BorderSizePixel = 0
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 5)
+local Stroke = Instance.new("UIStroke", Main)
+Stroke.Color = Color3.fromRGB(255, 0, 0)
+Stroke.Thickness = 1.2
+
+-- 3. TIÊU ĐỀ (GIỮ NGUYÊN)
+Title.Size = UDim2.new(1, 0, 0, 35)
+Title.Text = "YUTA HUB : Blox Fruits" 
+Title.TextColor3 = Color3.fromRGB(255, 0, 0)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 16
+Title.BackgroundTransparency = 1
+
+-- 4. SIDEBAR & VẠCH NGĂN DỌC
+Sidebar.Size = UDim2.new(0, 140, 1, -45)
+Sidebar.Position = UDim2.new(0, 10, 0, 40)
+Sidebar.BackgroundTransparency = 1
+
+Divider.Size = UDim2.new(0, 1, 1, -50)
+Divider.Position = UDim2.new(0, 150, 0, 40)
+Divider.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+Divider.BackgroundTransparency = 0.5
+
+-- 5. SEARCHBAR VỚI VIỀN
+SearchBar.Size = UDim2.new(1, -10, 0, 25)
+SearchBar.PlaceholderText = "Search section or fu..."
+SearchBar.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+SearchBar.TextColor3 = Color3.fromRGB(200, 200, 200)
+SearchBar.Text = ""
+Instance.new("UICorner", SearchBar).CornerRadius = UDim.new(0, 4)
+local SStroke = Instance.new("UIStroke", SearchBar)
+SStroke.Color = Color3.fromRGB(60, 0, 0)
+
+-- 6. TẠO TAB (SẮP XẾP A -> Z)
+local function AddTab(name, pos, active)
+    local Tab = Instance.new("TextButton", Sidebar)
+    Tab.Size = UDim2.new(1, 0, 0, 30)
+    Tab.Position = UDim2.new(0, 0, 0, (pos-1)*32 + 35)
+    Tab.BackgroundTransparency = 1
+    Tab.Text = "  " .. name
+    Tab.TextColor3 = active and Color3.fromRGB(255, 0, 0) or Color3.fromRGB(180, 180, 180)
+    Tab.Font = Enum.Font.SourceSansBold
+    Tab.TextSize = 14
+    Tab.TextXAlignment = Enum.TextXAlignment.Left
+    
+    if active then
+        local Line = Instance.new("Frame", Tab)
+        Line.Size = UDim2.new(0, 2, 0, 15)
+        Line.Position = UDim2.new(0, 0, 0.5, -7)
+        Line.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    end
+end
+
+-- Danh sách Tab sắp xếp A-Z (Bỏ Farm Level)
+AddTab("Combat PVP", 1, true)
+AddTab("Config", 2, false)
+AddTab("Drago Dojo", 3, false)
+AddTab("Fighting Style", 4, false)
+AddTab("Items Farm", 5, false)
+AddTab("Mirage + RaceV4", 6, false)
+AddTab("Sea Events", 7, false)
+
+-- 7. PAGE & CHỨC NĂNG (SẮP XẾP A -> Z)
+Page.Size = UDim2.new(1, -170, 1, -55)
+Page.Position = UDim2.new(0, 160, 0, 45)
+Page.BackgroundTransparency = 1
+Page.ScrollBarThickness = 0
+local Layout = Instance.new("UIListLayout", Page)
+Layout.SortOrder = Enum.SortOrder.Name -- Tự động sắp xếp theo tên A-Z
+
+local function AddToggle(name)
+    local Frame = Instance.new("Frame", Page)
+    Frame.Name = name -- Đặt tên để UIListLayout sắp xếp
+    Frame.Size = UDim2.new(1, 0, 0, 35)
+    Frame.BackgroundTransparency = 1
+    
+    local Label = Instance.new("TextLabel", Frame)
+    Label.Size = UDim2.new(1, -40, 1, 0)
+    Label.Text = name
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.Font = Enum.Font.SourceSansBold
+    Label.TextSize = 14
+    Label.TextXAlignment = Enum.TextXAlignment.Left
+    Label.BackgroundTransparency = 1
+    
+    local Box = Instance.new("Frame", Frame)
+    Box.Size = UDim2.new(0, 18, 0, 18)
+    Box.Position = UDim2.new(1, -25, 0.5, -9)
+    Box.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    local BStroke = Instance.new("UIStroke", Box)
+    BStroke.Color = Color3.fromRGB(255, 0, 0)
+end
+
+-- Chức năng sắp xếp A-Z
+AddToggle("Auto Bounty")
+AddToggle("Auto Collect Chest")
+AddToggle("Auto Factory Raid")
+AddToggle("Auto Mirage Island")
+AddToggle("Auto Sea Events")
