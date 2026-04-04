@@ -1,0 +1,129 @@
+-- [[ YUTA HUB v28.2 - THE FINAL MASTERPIECE ]]
+-- [[ FIX: DRAG LOGO/MENU | UI: 100% BANANA STYLE ]]
+
+local TweenService = game:GetService("TweenService")
+local UIS = game:GetService("UserInputService")
+local YutaHub = Instance.new("ScreenGui", game.CoreGui)
+
+-- 1. LOGO YV TRÒN (DI CHUYỂN ĐƯỢC)
+local Logo = Instance.new("TextButton", YutaHub)
+Logo.Name = "Logo_YV"
+Logo.Size = UDim2.new(0, 50, 0, 50)
+Logo.Position = UDim2.new(0, 20, 1, -80)
+Logo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Logo.Text = "YV"
+Logo.TextColor3 = Color3.fromRGB(255, 0, 0)
+Logo.Font = Enum.Font.GothamBold
+Logo.TextSize = 22
+Instance.new("UICorner", Logo).CornerRadius = UDim.new(1, 0)
+local LStroke = Instance.new("UIStroke", Logo)
+LStroke.Color = Color3.fromRGB(255, 0, 0)
+LStroke.Thickness = 2
+
+-- 2. KHUNG MENU CHÍNH (BANANA STRUCTURE)
+local Main = Instance.new("Frame", YutaHub)
+Main.Name = "MainFrame"
+Main.Size = UDim2.new(0, 580, 0, 340)
+Main.Position = UDim2.new(0.5, -290, 0.5, -170)
+Main.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+Main.Visible = false
+Main.ClipsDescendants = true
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 10)
+local MStroke = Instance.new("UIStroke", Main)
+MStroke.Color = Color3.fromRGB(255, 200, 0) -- Màu vàng Banana
+
+-- 3. HÀM KÉO THẢ (MOBILE CHUẨN)
+local function Drag(obj)
+    local dragging, dragStart, startPos
+    obj.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = obj.Position
+        end
+    end)
+    UIS.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - dragStart
+            obj.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+    obj.InputEnded:Connect(function() dragging = false end)
+end
+
+Drag(Logo)
+Drag(Main)
+
+-- 4. SIDEBAR & SEARCH (BANANA STYLE)
+local Sidebar = Instance.new("Frame", Main)
+Sidebar.Size = UDim2.new(0, 155, 1, -50)
+Sidebar.Position = UDim2.new(0, 10, 0, 45)
+Sidebar.BackgroundTransparency = 1
+local SLayout = Instance.new("UIListLayout", Sidebar)
+SLayout.Padding = UDim.new(0, 3)
+
+local SearchBar = Instance.new("TextBox", Main) -- Thanh Search
+SearchBar.Size = UDim2.new(0, 140, 0, 25)
+SearchBar.Position = UDim2.new(0, 15, 0, 10)
+SearchBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+SearchBar.PlaceholderText = "Search section..."
+SearchBar.TextColor3 = Color3.fromRGB(200, 200, 200)
+SearchBar.TextSize = 12
+Instance.new("UICorner", SearchBar).CornerRadius = UDim.new(0, 4)
+
+-- 5. Ô CHỨC NĂNG (SECTION)
+local Container = Instance.new("ScrollingFrame", Main)
+Container.Size = UDim2.new(1, -190, 1, -55)
+Container.Position = UDim2.new(0, 175, 0, 45)
+Container.BackgroundTransparency = 1
+Container.ScrollBarThickness = 2
+local CLayout = Instance.new("UIListLayout", Container)
+CLayout.Padding = UDim.new(0, 12)
+
+local function AddSection(title)
+    local Sec = Instance.new("Frame", Container)
+    Sec.Size = UDim2.new(1, -10, 0, 30)
+    Sec.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    Sec.AutomaticSize = "Y"
+    Instance.new("UICorner", Sec).CornerRadius = UDim.new(0, 6)
+    
+    local Head = Instance.new("TextLabel", Sec)
+    Head.Size = UDim2.new(1, 0, 0, 28)
+    Head.Text = title
+    Head.TextColor3 = Color3.fromRGB(255, 200, 0)
+    Head.Font = "GothamBold"
+    Head.TextSize = 13
+    Head.BackgroundTransparency = 1
+    
+    local List = Instance.new("UIListLayout", Sec)
+    List.Padding = UDim.new(0, 6)
+    List.HorizontalAlignment = "Center"
+    return Sec
+end
+
+-- 6. HÀM BẬT/TẮT KIỂU KRNL (FIX)
+local isOpen = false
+Logo.MouseButton1Click:Connect(function()
+    isOpen = not isOpen
+    if isOpen then
+        Main.Visible = true
+        Main.Size = UDim2.new(0, 0, 0, 0)
+        TweenService:Create(Main, TweenInfo.new(0.4, Enum.EasingStyle.Back), {Size = UDim2.new(0, 580, 0, 340)}):Play()
+    else
+        local tw = TweenService:Create(Main, TweenInfo.new(0.3), {Size = UDim2.new(0, 0, 0, 0)})
+        tw:Play()
+        tw.Completed:Connect(function() if not isOpen then Main.Visible = false end end)
+    end
+end)
+
+-- THIẾT LẬP MẪU GIỐNG ẢNH
+local FarmSec = AddSection("Farm")
+local MusicSec = AddSection("Music Player") -- Nhạc chill theo ý YUTA
+
+local Tab1 = Instance.new("TextButton", Sidebar)
+Tab1.Size = UDim2.new(1, 0, 0, 35)
+Tab1.Text = "  | Farm" -- Dấu | giả làm gạch vàng
+Tab1.TextColor3 = Color3.fromRGB(255, 200, 0)
+Tab1.Font = "GothamMedium"
+Tab1.TextXAlignment = "Left"
+Tab1.BackgroundTransparency = 1
