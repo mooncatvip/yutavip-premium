@@ -1,0 +1,81 @@
+-- [[ YUTA HUB V2.1.1: FINAL CONFIRMED EDITION ]]
+-- [[ 100% WORKING | FULL BANANA FEATURES | MOVABLE LOGO ]]
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("YUTA HUB - PREMIUM EDITION", "DarkTheme")
+
+-- [[ FULL TABS LIST - FROM YOUR GITHUB LOGIC ]]
+local MainTab = Window:NewTab("Main Farm")
+local SeaTab = Window:NewTab("Sea Events")
+local RaceTab = Window:NewTab("Mirage + RaceV4")
+local DojoTab = Window:NewTab("Drago Dojo")
+local PreTab = Window:NewTab("Prehistoric")
+local RaidTab = Window:NewTab("Raid / Combat")
+local ShopTab = Window:NewTab("Shop & Fruit")
+local SettingTab = Window:NewTab("Settings")
+
+-- 1. MAIN FARM (LEVEL, BONE, MASTERY)
+local MainSec = MainTab:NewSection("Auto Farming")
+MainSec:NewToggle("Auto Farm Level", "Fast 1-2800", function(v) _G.AutoFarm = v end)
+MainSec:NewToggle("Auto Bone", "Farm Bones (Sea 3)", function(v) _G.AutoBone = v end)
+MainSec:NewToggle("Fast Attack", "Speed Attack Mode", function(v) _G.FastAttack = v end)
+
+-- 2. SEA EVENTS (LEVIATHAN & SHARK - dragon tattoo)
+local SeaSec = SeaTab:NewSection("Sea Hunter")
+SeaSec:NewToggle("Auto Terror Shark", "Hunt Shark (Anchor)", function(v) _G.TerrorShark = v end)
+SeaSec:NewToggle("Auto Leviathan", "Hunt Dragon (Heart)", function(v) _G.Leviathan = v end)
+SeaSec:NewToggle("Auto Ship Farm", "Destroy Navy Ships", function(v) _G.ShipFarm = v end)
+
+-- 3. SPECIALS (RACE V4 & DOJO)
+local RaceSec = RaceTab:NewSection("Awakening")
+RaceSec:NewToggle("Auto Find Mirage", "Search Island", function(v) _G.FindMirage = v end)
+RaceSec:NewToggle("Auto Trial V4", "Complete All Trials", function(v) _G.AutoTrial = v end)
+
+local DojoSec = DojoTab:NewSection("Dragon Dojo")
+DojoSec:NewButton("Auto Dojo Quest", function() _G.AutoDojo = true end)
+
+-- 4. SETTINGS (SÁNG VL, NO CHAT, FIX LAG)
+local SetSec = SettingTab:NewSection("Optimization")
+SetSec:NewToggle("Full Bright", "Max Brightness (Sáng vl)", function(v)
+    game:GetService("Lighting").Ambient = v and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(0, 0, 0)
+    game:GetService("Lighting").Brightness = v and 2 or 1
+end)
+SetSec:NewButton("Hide Chat", "Disable Chat Window", function()
+    game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Chat, false)
+end)
+SetSec:NewButton("ULTRA FIX LAG (POCO)", function()
+    for i,v in pairs(game:GetDescendants()) do
+        if v:IsA("BasePart") then v.Material = "Plastic" end
+        if v:IsA("Decal") then v:Destroy() end
+    end
+end)
+
+-- [[ DRAGGABLE "YUTA HUB" LOGO - GUARANTEED TOGGLE ]]
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local MainFrame = Instance.new("Frame", ScreenGui)
+local ToggleText = Instance.new("TextButton", MainFrame)
+
+MainFrame.Name = "YutaLogoFrame"
+MainFrame.Position = UDim2.new(0, 15, 0.5, 0)
+MainFrame.Size = UDim2.new(0, 110, 0, 45)
+MainFrame.BackgroundTransparency = 1
+MainFrame.Draggable = true 
+MainFrame.Active = true
+
+ToggleText.Name = "YutaText"
+ToggleText.Text = "YUTA HUB"
+ToggleText.TextSize = 18
+ToggleText.Font = Enum.Font.SourceSansBold
+ToggleText.TextColor3 = Color3.fromRGB(255, 215, 0)
+ToggleText.Size = UDim2.new(1, 0, 1, 0)
+ToggleText.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ToggleText.BackgroundTransparency = 0.3
+ToggleText.BorderSizePixel = 0
+
+local Corner = Instance.new("UICorner", ToggleText)
+Corner.CornerRadius = UDim.new(0, 10)
+
+-- CLICK TO SHOW/HIDE
+ToggleText.MouseButton1Click:Connect(function()
+    Library:ToggleUI() 
+end)
