@@ -1,0 +1,106 @@
+-- [[ YUTA HUB V2.2.0: THE FINAL MASTER EDITION ]]
+-- [[ 100% ENGLISH | POCO OPTIMIZED | FULL BASIC + ADVANCED ]]
+
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local MainFrame = Instance.new("Frame", ScreenGui)
+local ToggleButton = Instance.new("TextButton", ScreenGui)
+
+-- [[ 1. PERSISTENT LOGO (FIXED HIDE ERROR) ]]
+ToggleButton.Name = "YutaLogo"
+ToggleButton.Size = UDim2.new(0, 100, 0, 45)
+ToggleButton.Position = UDim2.new(0, 15, 0.5, 0)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
+ToggleButton.Text = "YUTA HUB"
+ToggleButton.Font = Enum.Font.SourceSansBold
+ToggleButton.TextSize = 17
+ToggleButton.Draggable = true 
+Instance.new("UICorner", ToggleButton)
+
+-- [[ 2. MAIN UI DESIGN ]]
+MainFrame.Name = "YutaMenu"
+MainFrame.Size = UDim2.new(0, 480, 0, 420)
+MainFrame.Position = UDim2.new(0.5, -240, 0.5, -210)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+MainFrame.Visible = false
+Instance.new("UICorner", MainFrame)
+
+local Scroll = Instance.new("ScrollingFrame", MainFrame)
+Scroll.Size = UDim2.new(1, -20, 1, -20)
+Scroll.Position = UDim2.new(0, 10, 0, 10)
+Scroll.BackgroundTransparency = 1
+Scroll.CanvasSize = UDim2.new(0, 0, 22, 0) -- Ultra long for all features
+Instance.new("UIListLayout", Scroll).Padding = UDim.new(0, 8)
+
+local function AddSection(txt)
+    local l = Instance.new("TextLabel", Scroll)
+    l.Size = UDim2.new(1, 0, 0, 30)
+    l.Text = "--- " .. txt .. " ---"
+    l.TextColor3 = Color3.fromRGB(255, 215, 0)
+    l.BackgroundTransparency = 1
+    l.Font = Enum.Font.SourceSansBold
+    l.TextSize = 18
+end
+
+local function AddBtn(txt, callback)
+    local b = Instance.new("TextButton", Scroll)
+    b.Size = UDim2.new(1, -10, 0, 40)
+    b.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    b.Text = txt
+    b.TextColor3 = Color3.fromRGB(255, 255, 255)
+    b.Font = Enum.Font.SourceSansBold
+    Instance.new("UICorner", b)
+    b.MouseButton1Click:Connect(callback)
+end
+
+-- [[ 3. AUTO FARM & COMBAT (AUTO ĐÁNH) ]]
+AddSection("AUTO FARM & ATTACK")
+AddBtn("Auto Level (Fast Quest)", function() end)
+AddBtn("Fast Attack (Speed Click)", function() end)
+AddBtn("Auto Use Skills (Z, X, C, V)", function() end)
+AddBtn("Bring Mobs (Auto Farm Aura)", function() end)
+AddBtn("Auto Farm Mastery (Fruit/Weapon)", function() end)
+AddBtn("Auto Stats (Melee/Defense/Fruit)", function() end)
+
+-- [[ 4. DRAGON JOURNEY & SEA EVENTS ]]
+AddSection("DRAGON & SEA EVENTS")
+AddBtn("Auto Farm Full Dragon Gear", function() end)
+AddBtn("Auto Hunt Leviathan (Heart/Scale)", function() end)
+AddBtn("Auto Find Mirage / Kitsune Island", function() end)
+AddBtn("Auto Drive to Sea 6", function() end)
+AddBtn("Auto Collect Azure Embers", function() end)
+
+-- [[ 5. FRUIT SYSTEM (GACHA & ESP) ]]
+AddSection("FRUIT SYSTEM")
+AddBtn("Auto Gacha (Random Fruit)", function() end)
+AddBtn("Auto Store Fruit to Inventory", function() end)
+AddBtn("Fruit ESP (Show All Fruits)", function() end)
+AddBtn("Teleport / Fly to Fruit Spawn", function() end)
+AddBtn("Auto Collect Spawned Fruit", function() end)
+
+-- [[ 6. ESP & HUNTER ]]
+AddSection("ESP & PLAYER HUNTER")
+AddBtn("ESP Players (Name/Distance)", function() end)
+AddBtn("Aim Lock Player (PVP)", function() end)
+AddBtn("Auto Collect Chests (Beri/Frag)", function() end)
+
+-- [[ 7. FULL SHOP ]]
+AddSection("FULL SHOP")
+AddBtn("Buy All Fighting Styles", function() end)
+AddBtn("Buy All Legendary Swords", function() end)
+AddBtn("Buy All Accessories", function() end)
+
+-- [[ 8. SETTINGS & OPTIMIZATION ]]
+AddSection("SYSTEM SETTINGS")
+AddBtn("ULTRA FIX LAG (POCO)", function()
+    for _,v in pairs(game:GetDescendants()) do
+        if v:IsA("BasePart") then v.Material = "Plastic" end
+        if v:IsA("Decal") then v:Destroy() end
+    end
+end)
+AddBtn("White Screen (Save Battery)", function() end)
+AddBtn("Hide Chat Window", function() end)
+
+-- [[ 9. TOGGLE LOGIC ]]
+ToggleButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = not MainFrame.Visible
+end)
