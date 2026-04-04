@@ -1,0 +1,47 @@
+-- [[ YUTA HUB: BLOX FRUIT ]]
+-- [[ PHƯƠNG PHÁP OVERLAY - ĐÈ TÊN & MÀU ]]
+
+-- 1. CHẠY SOURCE GỐC TRƯỚC
+loadstring(game:HttpGet("https://raw.githubusercontent.com/aloaloalo322/sssdas/refs/heads/main/cc"))()
+
+-- 2. ĐỢI MENU HIỆN RA RỒI ĐÈ GIAO DIỆN YUTA LÊN
+task.spawn(function()
+    repeat task.wait() until game.CoreGui:FindFirstChild("BananaCatHub") or game.CoreGui:FindFirstChild("ScreenGui")
+    
+    -- Tìm cái bảng chính của script
+    local MainUI = game.CoreGui:FindFirstChild("BananaCatHub") or game.CoreGui:FindFirstChild("ScreenGui")
+    
+    if MainUI then
+        -- Tìm thanh tiêu đề (Title Bar) để đổi tên thành YUTA HUB
+        for _, v in pairs(MainUI:GetDescendants()) do
+            if v:IsA("TextLabel") and (v.Text:find("BANANA") or v.Text:find("Cat")) then
+                v.Text = "YUTA HUB: BLOX FRUIT"
+                v.TextColor3 = Color3.fromRGB(255, 0, 0) -- Đổi chữ sang Đỏ
+            end
+            
+            -- Đổi các thanh màu vàng/xanh sang màu Đỏ chuẩn YUTA
+            if v:IsA("Frame") and (v.BackgroundColor3 == Color3.fromRGB(255, 255, 0) or v.BackgroundColor3 == Color3.fromRGB(0, 255, 255)) then
+                v.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+            end
+            
+            -- Đổi nền tối sang trắng nếu ông muốn tông sáng
+            if v:IsA("Frame") and v.BackgroundColor3 == Color3.fromRGB(30, 30, 30) then
+                v.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                v.BackgroundTransparency = 0.1
+            end
+        end
+    end
+end)
+
+-- [[ LOGO Y ĐỎ TRẮNG ĐỂ NHẬN DIỆN ]]
+local SG = Instance.new("ScreenGui", game.CoreGui)
+local B = Instance.new("TextButton", SG)
+B.Size = UDim2.new(0, 45, 0, 45)
+B.Position = UDim2.new(0, 10, 0.5, 0)
+B.Text = "Y"
+B.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+B.TextColor3 = Color3.fromRGB(255, 0, 0)
+B.Font = Enum.Font.SourceSansBold
+B.TextSize = 30
+Instance.new("UICorner", B)
+Instance.new("UIStroke", B).Color = Color3.fromRGB(255, 0, 0)
