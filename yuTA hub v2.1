@@ -1,0 +1,96 @@
+-- [[ YUTA HUB: BLOX FRUIT V2.0 ]]
+-- [[ STANDALONE - NO KEY - STEALTH MODE ]]
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "YUTA HUB: BLOX FRUIT V2.0",
+   LoadingTitle = "Stealth System Loading...",
+   LoadingSubtitle = "by YUTA",
+   ConfigurationSaving = { Enabled = true, FolderName = "YutaHub" },
+   Discord = { Enabled = false },
+   KeySystem = false 
+})
+
+Rayfield:SetTheme("Red")
+
+-- [[ FLOATING LOGO TOGGLE ]]
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local ToggleBtn = Instance.new("ImageButton", ScreenGui)
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+ToggleBtn.Position = UDim2.new(0, 10, 0.5, 0)
+ToggleBtn.Size = UDim2.new(0, 45, 0, 45)
+ToggleBtn.Image = "rbxassetid://15126405234"
+ToggleBtn.Draggable = true
+ToggleBtn.Active = true
+
+ToggleBtn.MouseButton1Click:Connect(function()
+    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.LeftControl, false, game)
+end)
+
+-- [[ TABS ]]
+local PlayerTab = Window:CreateTab("Player", 4483362458)
+local FarmTab = Window:CreateTab("Main Farm", 4483362458)
+local ConfigTab = Window:CreateTab("Combat Config", 4483362458)
+local SettingTab = Window:CreateTab("Settings", 4483362458)
+
+-- 1. PLAYER STATS (LIVE UPDATE)
+PlayerTab:CreateSection("Server Status")
+local Lvl = PlayerTab:CreateLabel("Level: Loading...")
+local Bty = PlayerTab:CreateLabel("Bounty: Loading...")
+local Time = PlayerTab:CreateLabel("Time: 00:00:00")
+
+task.spawn(function()
+    local Start = tick()
+    while task.wait(1) do
+        local p = game.Players.LocalPlayer
+        Lvl:Set("Level: " .. tostring(p.Data.Level.Value))
+        Bty:Set("Bounty: " .. tostring(p.leaderstats["Bounty/Honor"].Value))
+        local D = tick() - Start
+        Time:Set(string.format("Time: %02d:%02d:%02d", math.floor(D/3600), math.floor((D%3600)/60), math.floor(D%60)))
+    end
+end)
+
+-- 2. COMBAT CONFIG (TIẾNG ĐÁNH & SPEED)
+ConfigTab:CreateSection("Fast Attack Settings")
+ConfigTab:CreateToggle({
+   Name = "Fast Attack (Silent Mode)",
+   CurrentValue = true,
+   Callback = function(v) _G.FastAttack = v end,
+})
+
+ConfigTab:CreateToggle({
+   Name = "Enable Hit Sound",
+   CurrentValue = false,
+   Callback = function(v) _G.HitSound = v end,
+})
+
+ConfigTab:CreateSlider({
+   Name = "Attack Speed Delay",
+   Range = {0, 1},
+   Increment = 0.1,
+   CurrentValue = 0.1,
+   Callback = function(v) _G.AttackDelay = v end,
+})
+
+-- 3. FARM & STEALTH
+FarmTab:CreateSection("Main Progression")
+FarmTab:CreateToggle({Name = "Auto Farm Level", Callback = function(v) _G.AutoFarm = v end})
+FarmTab:CreateToggle({Name = "Bypass Teleport", Callback = function(v) _G.BypassTP = v end})
+
+-- 4. OPTIMIZATION FOR POCO
+SettingTab:CreateSection("Device Health")
+SettingTab:CreateButton({
+   Name = "ULTRA FIX LAG (24/7 AFK)",
+   Callback = function()
+       game.Lighting.FogEnd = 9e9
+       for i,v in pairs(game:GetDescendants()) do
+           if v:IsA("BasePart") then v.Material = "Plastic" end
+           if v:IsA("Decal") then v:Destroy() end
+       end
+       setfpscap(30)
+       Rayfield:Notify({Title = "YUTA HUB", Content = "Performance Boosted!"})
+   end,
+})
+
+Rayfield:Notify({Title = "YUTA HUB V2.0", Content = "God Speed Loaded!", Duration = 5})
