@@ -1,0 +1,122 @@
+-- [[ YUTA HUB v27.6.2 ]]
+-- [[ FIX DRAG & CLICK CONFLICT | BANANA STYLE | KRNL ANIM ]]
+
+local TweenService = game:GetService("TweenService")
+local UIS = game:GetService("UserInputService")
+local YutaHub = Instance.new("ScreenGui", game.CoreGui)
+local Main = Instance.new("Frame", YutaHub)
+local LogoToggle = Instance.new("TextButton", YutaHub)
+
+-- 1. THIẾT KẾ LOGO YV ĐỎ TRẮNG (Z-INDEX CAO NHẤT)
+LogoToggle.Name = "YV_Logo"
+LogoToggle.Size = UDim2.new(0, 50, 0, 50)
+LogoToggle.Position = UDim2.new(0, 30, 1, -85)
+LogoToggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+LogoToggle.Text = "YV"
+LogoToggle.TextColor3 = Color3.fromRGB(255, 0, 0)
+LogoToggle.Font = Enum.Font.GothamBold
+LogoToggle.TextSize = 22
+LogoToggle.ZIndex = 100
+Instance.new("UICorner", LogoToggle).CornerRadius = UDim.new(1, 0)
+local LStroke = Instance.new("UIStroke", LogoToggle)
+LStroke.Color = Color3.fromRGB(255, 0, 0)
+LStroke.Thickness = 2
+
+-- 2. KHUNG MENU (BANANA LAYOUT)
+Main.Name = "MainFrame"
+Main.Size = UDim2.new(0, 560, 0, 320)
+Main.Position = UDim2.new(0.5, -280, 0.5, -160)
+Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Main.BackgroundTransparency = 0.1
+Main.Visible = false
+Main.ClipsDescendants = true
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 12)
+Instance.new("UIStroke", Main).Color = Color3.fromRGB(255, 0, 0)
+
+-- 3. LOGIC KÉO THẢ & BẬT MENU (SIÊU NHẠY)
+local dragging, dragStart, startPos, dragInput
+local startTime, startMousePos
+local isOpen = false
+
+LogoToggle.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        startTime = tick()
+        startMousePos = input.Position
+        dragStart = input.Position
+        startPos = LogoToggle.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+                -- Nếu nhấn nhanh (< 0.3s) và không di chuyển quá 10px thì là CLICK
+                if tick() - startTime < 0.3 and (input.Position - startMousePos).Magnitude < 10 then
+                    isOpen = not isOpen
+                    if isOpen then
+                        Main.Visible = true
+                        Main.Size = UDim2.new(0, 0, 0, 0)
+                        TweenService:Create(Main, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+                            Size = UDim2.new(0, 560, 0, 320),
+                            BackgroundTransparency = 0.1
+                        }):Play()
+                    else
+                        local close = TweenService:Create(Main, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
+                            Size = UDim2.new(0, 0, 0, 0),
+                            BackgroundTransparency = 1
+                        })
+                        close:Play()
+                        close.Completed:Connect(function() if not isOpen then Main.Visible = false end end)
+                    end
+                end
+            end
+        end)
+    end
+end)
+
+UIS.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - dragStart
+        LogoToggle.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+-- 4. SIDEBAR & NỘI DUNG
+local Sidebar = Instance.new("Frame", Main)
+Sidebar.Size = UDim2.new(0, 140, 1, -20)
+Sidebar.Position = UDim2.new(0, 10, 0, 10)
+Sidebar.BackgroundTransparency = 1
+Instance.new("UIListLayout", Sidebar).Padding = UDim.new(0, 5)
+
+local PageContainer = Instance.new("Frame", Main)
+PageContainer.Size = UDim2.new(1, -170, 1, -20)
+PageContainer.Position = UDim2.new(0, 160, 0, 10)
+PageContainer.BackgroundTransparency = 1
+
+local function AddTab(name)
+    local P = Instance.new("ScrollingFrame", PageContainer)
+    P.Size = UDim2.new(1, 0, 1, 0)
+    P.BackgroundTransparency = 1
+    P.Visible = false
+    P.ScrollBarThickness = 0
+    Instance.new("UIListLayout", P).Padding = UDim.new(0, 8)
+    
+    local TabBtn = Instance.new("TextButton", Sidebar)
+    TabBtn.Size = UDim2.new(1, 0, 0, 35)
+    TabBtn.Text = "  " .. name
+    TabBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
+    TabBtn.Font = Enum.Font.GothamMedium
+    TabBtn.TextXAlignment = Enum.TextXAlignment.Left
+    TabBtn.BackgroundTransparency = 1
+    
+    TabBtn.MouseButton1Click:Connect(function()
+        for _, v in pairs(PageContainer:GetChildren()) do if v:IsA("ScrollingFrame") then v.Visible = false end end
+        P.Visible = true
+        for _, t in pairs(Sidebar:GetChildren()) do if t:IsA("TextButton") then t.TextColor3 = Color3.fromRGB(150, 150, 150) end end
+        TabBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
+    end)
+    return P
+end
+
+local FarmTab = AddTab("Farm Level")
+AddTab("Dragon Journey") --
+FarmTab.Visible = true
