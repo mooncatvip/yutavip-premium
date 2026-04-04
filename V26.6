@@ -1,0 +1,45 @@
+-- [[ YUTA HUB v26.6 - THE RED PURGE ]]
+-- [[ NO WHITE BACKGROUNDS - NO EXTRA LOGOS ]]
+
+-- 1. LOAD SOURCE GỐC (FARM, SEA EVENTS, DRAGON DOJO)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/aloaloalo322/sssdas/refs/heads/main/cc"))()
+
+-- 2. HÀM TRUY QUÉT VÀ ÉP MÀU ĐỎ (ENGLISH)
+task.spawn(function()
+    while task.wait(1) do -- Quét mỗi giây một lần để tránh lag Poco C71
+        for _, v in pairs(game.CoreGui:GetDescendants()) do
+            
+            -- ĐỔI TÊN & ANH HÓA
+            if v:IsA("TextLabel") or v:IsA("TextButton") then
+                if v.Text:find("BANANA") or v.Text:find("Cat") or v.Text:find("Hub") then
+                    v.Text = "YUTA HUB v26.6"
+                    v.TextColor3 = Color3.fromRGB(255, 0, 0) -- Chữ Đỏ
+                end
+                -- Dịch các mục chính sang Tiếng Anh
+                if v.Text == "Tập kích" then v.Text = "Auto Raid" end
+                if v.Text == "Cấu hình" then v.Text = "Settings" end
+                if v.Text == "Săn Leviathan" then v.Text = "Leviathan Hunter" end
+                if v.Text == "Đảo Prehistoric" then v.Text = "Prehistoric Island" end
+            end
+            
+            -- ÉP MÀU ĐỎ CHO THANH BAR & VIỀN (KHÔNG ĐỤNG VÀO NỀN TRẮNG)
+            if v:IsA("Frame") or v:IsA("ScrollingFrame") then
+                local c = v.BackgroundColor3
+                -- Nếu thấy màu Vàng hoặc Xanh dương đặc trưng của Banana Cat
+                if (c.R > 0.7 and c.G > 0.7 and c.B < 0.3) or (c.G > 0.7 and c.B > 0.7 and c.R < 0.3) then
+                    v.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Nhuộm Đỏ ngay
+                end
+            end
+            
+            -- Nhuộm đỏ toàn bộ viền UIStroke
+            if v:IsA("UIStroke") then
+                v.Color = Color3.fromRGB(255, 0, 0)
+            end
+            
+            -- Nếu là ảnh (Logo con mèo), tui sẽ nhuộm đỏ nó luôn
+            if v:IsA("ImageLabel") and v.Image:find("http") then
+                v.ImageColor3 = Color3.fromRGB(255, 0, 0)
+            end
+        end
+    end
+end)
