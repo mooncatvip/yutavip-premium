@@ -1,0 +1,26 @@
+-- [[ YUTA HUB v26.2 - THE REAL REBRAND ]]
+-- [[ NO FAKE UI - NO USELESS LOGOS ]]
+
+local original_source = game:HttpGet("https://raw.githubusercontent.com/aloaloalo322/sssdas/refs/heads/main/cc")
+
+-- 1. ÉP ĐỔI TÊN HIỂN THỊ TRÊN MENU
+local yuta_source = original_source:gsub("BANANA CAT HUB", "YUTA HUB v26.2")
+yuta_source = yuta_source:gsub("Banana Cat Hub", "Yuta Hub")
+yuta_source = yuta_source:gsub("BananaCatHub", "YutaHub")
+
+-- 2. ÉP ĐỔI MÀU GIAO DIỆN SANG ĐỎ - TRẮNG
+-- Thay đổi mã màu Vàng (255, 255, 0) sang Đỏ (255, 0, 0)
+yuta_source = yuta_source:gsub("255, 255, 0", "255, 0, 0")
+-- Thay đổi mã màu Xanh (0, 255, 255) sang Đỏ (255, 0, 0)
+yuta_source = yuta_source:gsub("0, 255, 255", "255, 0, 0")
+-- Thay đổi nền tối sang trắng (Dành cho bản Red & White)
+yuta_source = yuta_source:gsub("30, 30, 30", "255, 255, 255")
+yuta_source = yuta_source:gsub("25, 25, 25", "245, 245, 245")
+
+-- 3. ANH HÓA CÁC MỤC QUAN TRỌNG
+yuta_source = yuta_source:gsub("Tập kích", "Auto Raid")
+yuta_source = yuta_source:gsub("Cấu hình", "Config")
+yuta_source = yuta_source:gsub("Săn Leviathan", "Leviathan Hunter")
+
+-- 4. THỰC THI CODE ĐÃ YUTA-HÓA
+loadstring(yuta_source)()
