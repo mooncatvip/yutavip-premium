@@ -1,0 +1,107 @@
+-- [[ YUTA HUB V13.0: THE PERFECT TEMPLATE ]]
+-- [[ SYSTEM: ENGLISH | UI: VIETNAMESE NO EMOJI ]]
+
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local MainFrame = Instance.new("Frame", ScreenGui)
+local Sidebar = Instance.new("Frame", MainFrame)
+local Content = Instance.new("ScrollingFrame", MainFrame)
+local ToggleButton = Instance.new("TextButton", ScreenGui)
+
+-- [[ 1. LOGO YUTA HUB (NUT VANG) ]]
+ToggleButton.Name = "YutaLogo"
+ToggleButton.Size = UDim2.new(0, 110, 0, 45)
+ToggleButton.Position = UDim2.new(0, 20, 0.5, -22)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
+ToggleButton.Text = "YUTA HUB"
+ToggleButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+ToggleButton.Font = Enum.Font.SourceSansBold
+ToggleButton.TextSize = 18
+ToggleButton.Draggable = true
+Instance.new("UICorner", ToggleButton).CornerRadius = UDim.new(0, 10)
+
+-- [[ 2. GIAO DIEN CHINH (SIDEBAR STYLE) ]]
+MainFrame.Name = "YutaMain"
+MainFrame.Size = UDim2.new(0, 560, 0, 400)
+MainFrame.Position = UDim2.new(0.5, -280, 0.5, -200)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+MainFrame.Visible = false
+Instance.new("UICorner", MainFrame)
+
+-- Sidebar (Cot ben trai)
+Sidebar.Size = UDim2.new(0, 150, 1, 0)
+Sidebar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Instance.new("UICorner", Sidebar)
+local SideLayout = Instance.new("UIListLayout", Sidebar)
+SideLayout.Padding = UDim.new(0, 5)
+
+-- Content (Vung chuc nang ben phai)
+Content.Size = UDim2.new(1, -165, 1, -20)
+Content.Position = UDim2.new(0, 160, 0, 10)
+Content.BackgroundTransparency = 1
+Content.CanvasSize = UDim2.new(0, 0, 15, 0)
+local ContentLayout = Instance.new("UIListLayout", Content)
+ContentLayout.Padding = UDim.new(0, 6)
+
+-- [[ HAM TAO NUT CHUC NANG ]]
+local function AddFeature(txt, script_func)
+    local b = Instance.new("TextButton", Content)
+    b.Size = UDim2.new(1, -10, 0, 45)
+    b.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    b.Text = "  [ CHAY ] " .. txt
+    b.TextXAlignment = Enum.TextXAlignment.Left
+    b.TextColor3 = Color3.fromRGB(255, 255, 255)
+    b.Font = Enum.Font.SourceSansBold
+    Instance.new("UICorner", b)
+
+    b.MouseButton1Click:Connect(script_func)
+end
+
+-- [[ CAC MUC MENU CO BAN (DUA TREN YEU CAU) ]]
+local function ClearContent()
+    for _, v in pairs(Content:GetChildren()) do
+        if v:IsA("TextButton") then v:Destroy() end
+    end
+end
+
+-- Tab: Farm
+local TabFarm = Instance.new("TextButton", Sidebar)
+TabFarm.Size = UDim2.new(1, 0, 0, 40)
+TabFarm.Text = "  AUTO FARM"
+TabFarm.MouseButton1Click:Connect(function()
+    ClearContent()
+    AddFeature("AUTO FARM LEVEL", function() print("Running Farm...") end)
+    AddFeature("AUTO MASTERY", function() print("Running Mastery...") end)
+end)
+
+-- Tab: Sea Event
+local TabSea = Instance.new("TextButton", Sidebar)
+TabSea.Size = UDim2.new(1, 0, 0, 40)
+TabSea.Text = "  SEA EVENT"
+TabSea.MouseButton1Click:Connect(function()
+    ClearContent()
+    AddFeature("SAN LEVIATHAN", function() print("Hunting Levi...") end)
+    AddFeature("SAN QUAI BIEN", function() print("Sea Beast...") end)
+end)
+
+-- Tab: Dragon Dojo
+local TabDragon = Instance.new("TextButton", Sidebar)
+TabDragon.Size = UDim2.new(1, 0, 0, 40)
+TabDragon.Text = "  DRAGON DOJO"
+TabDragon.MouseButton1Click:Connect(function()
+    ClearContent()
+    AddFeature("NHIEM VU DRAGON", function() print("Dragon Quest...") end)
+end)
+
+-- Tab: Settings
+local TabSet = Instance.new("TextButton", Sidebar)
+TabSet.Size = UDim2.new(1, 0, 0, 40)
+TabSet.Text = "  SETTINGS"
+TabSet.MouseButton1Click:Connect(function()
+    ClearContent()
+    AddFeature("GIAM LAG POCO", function() print("Optimizing Poco...") end)
+end)
+
+-- TOGGLE LOGIC (BAT TAT MENU)
+ToggleButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = not MainFrame.Visible
+end)
