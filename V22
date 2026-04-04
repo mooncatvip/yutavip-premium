@@ -1,0 +1,29 @@
+-- [[ YUTA HUB: BLOX FRUIT ]]
+-- [[ FORCE OVERRIDE CORE SOURCE ]]
+
+local function YutaExecution()
+    -- 1. LẤY TOÀN BỘ CODE TỪ LINK ÔNG GỬI
+    local Success, Source = pcall(function()
+        return game:HttpGet("https://raw.githubusercontent.com/aloaloalo322/sssdas/refs/heads/main/cc")
+    end)
+
+    if Success then
+        -- 2. ÉP ĐỔI TÊN HIỂN THỊ TRÊN HEADER VÀ SIDEBAR
+        Source = Source:gsub("BANANA CAT HUB", "YUTA HUB: BLOX FRUIT")
+        Source = Source:gsub("Banana Cat Hub", "Yuta Hub")
+        Source = Source:gsub("BananaCatHub", "YutaHub")
+
+        -- 3. ÉP ĐỔI MÀU GIAO DIỆN SANG ĐỎ - TRẮNG
+        -- Tìm các mã màu vàng/xanh đặc trưng của Banana Cat và đổi sang đỏ
+        Source = Source:gsub("Color3.fromRGB%(255, 255, 0%)", "Color3.fromRGB(255, 0, 0)")
+        Source = Source:gsub("Color3.fromRGB%(0, 255, 255%)", "Color3.fromRGB(255, 255, 255)")
+        
+        -- 4. CHẠY CODE ĐÃ SỬA
+        loadstring(Source)()
+    else
+        warn("Loi tai Source GitHub!")
+    end
+end
+
+-- Chạy lệnh ngay lập tức
+YutaExecution()
