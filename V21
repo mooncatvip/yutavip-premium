@@ -1,0 +1,11 @@
+-- [[ YUTA HUB: BLOX FRUIT ]]
+-- [[ LOAD TRỰC TIẾP TỪ LINK CỦA ÔNG - KHÔNG THÊM BỚT ]]
+
+local raw_code = game:HttpGet("https://raw.githubusercontent.com/aloaloalo322/sssdas/refs/heads/main/cc")
+
+-- Chỉ thay đổi đúng cái tên hiển thị trong Menu sang YUTA HUB
+local yuta_code = raw_code:gsub("Banana Hub", "Yuta Hub: Blox Fruit")
+yuta_code = yuta_code:gsub("BananaHub", "YutaHub")
+
+-- Thực thi chính xác nội dung code sau khi đổi tên
+loadstring(yuta_code)()
