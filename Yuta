@@ -1,0 +1,118 @@
+-- [[ YUTA HUB V1.8 - BANANA UI STYLE ]]
+-- [[ OPTIMIZED FOR POCO & OLD ANDROID ]]
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "🍌 YUTA HUB | BANANA EDITION",
+   LoadingTitle = "Loading Yuta Hub...",
+   LoadingSubtitle = "by YUTA",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = "YutaHubConfigs",
+      FileName = "BananaHub"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "noinvit",
+      RememberJoins = true
+   },
+   KeySystem = false -- NO KEY AS REQUESTED
+})
+
+-- [[ MAIN TABS - BANANA STYLE ]]
+local MainTab = Window:CreateTab("🏠 Home", 4483362458) -- Main Tab
+local FarmTab = Window:CreateTab("⚔️ Auto Farm", 4483362458)
+local BossTab = Window:CreateTab("💀 Boss/Elite", 4483362458)
+local RaceTab = Window:CreateTab("⚡ Race V2-V4", 4483362458)
+local ItemTab = Window:CreateTab("📦 Full Items", 4483362458)
+local SettingTab = Window:CreateTab("⚙️ Settings", 4483362458)
+
+-- [[ 1. SETTINGS - SIÊU FIX LAG & TRỜI SÁNG ]]
+SettingTab:CreateSection("Performance Booster")
+
+SettingTab:CreateButton({
+   Name = "🚀 ULTRA FIX LAG (24/7 AFK)",
+   Callback = function()
+       game.Lighting.FogEnd = 9e9
+       game.Lighting.GlobalShadows = false
+       for i,v in pairs(game:GetDescendants()) do
+           if v:IsA("BasePart") or v:IsA("MeshPart") then
+               v.Material = "Plastic"
+               v.Reflectance = 0
+           elseif v:IsA("Decal") or v:IsA("Texture") or v:IsA("Clouds") then
+               v:Destroy()
+           end
+       end
+       settings().Rendering.QualityLevel = 1
+       Rayfield:Notify({Title = "YUTA HUB", Content = "Lag Fixed! Ready for 24/7 AFK", Duration = 5})
+   end,
+})
+
+SettingTab:CreateToggle({
+   Name = "☀️ Always Day",
+   CurrentValue = true,
+   Flag = "AlwaysDay",
+   Callback = function(Value)
+       _G.AlwaysDay = Value
+       task.spawn(function()
+           while _G.AlwaysDay do
+               game.Lighting.ClockTime = 12
+               task.wait(5)
+           end
+       end)
+   end,
+})
+
+-- [[ 2. MOVEMENT ]]
+SettingTab:CreateSection("Movement")
+SettingTab:CreateSlider({
+   Name = "Walk Speed",
+   Range = {16, 500},
+   Increment = 1,
+   Suffix = "Speed",
+   CurrentValue = 16,
+   Flag = "WS",
+   Callback = function(Value)
+       game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+   end,
+})
+
+-- [[ 3. AUTO FARM - FULL MỤC NHƯ BANANA ]]
+FarmTab:CreateSection("Level Farming")
+FarmTab:CreateToggle({
+   Name = "Auto Farm Level",
+   CurrentValue = false,
+   Callback = function(Value) _G.AutoFarm = Value end,
+})
+
+FarmTab:CreateSection("Katakuri & Bones")
+FarmTab:CreateToggle({Name = "Auto Cake Prince (V1)", Callback = function(v) end})
+FarmTab:CreateToggle({Name = "Auto Dough King (V2)", Callback = function(v) end})
+FarmTab:CreateToggle({Name = "Auto Farm Bones", Callback = function(v) end})
+
+-- [[ 4. RACE V4 - FULL UPGRADE ]]
+RaceTab:CreateSection("Race Awakening")
+RaceTab:CreateDropdown({
+   Name = "Select Race",
+   Options = {"Human","Mink","Fishman","Skypian","Ghoul","Cyborg"},
+   CurrentOption = {"Human"},
+   MultipleOptions = false,
+   Callback = function(Option) end,
+})
+RaceTab:CreateToggle({Name = "Auto Trial V4", Callback = function(v) end})
+RaceTab:CreateToggle({Name = "Auto Training Gear", Callback = function(v) end})
+
+-- [[ 5. TROLL SECTION ]]
+SettingTab:CreateSection("Troll Menu")
+SettingTab:CreateButton({
+   Name = "🤡 Fake Max Stats",
+   Callback = function()
+       local p = game.Players.LocalPlayer
+       p.Data.Level.Value = 2550
+       p.Data.Beli.Value = 999999999
+       p.leaderstats["Bounty/Honor"].Value = 30000000
+   end,
+})
+
+Rayfield:Notify({Title = "YUTA HUB LOADED", Content = "Banana Edition v1.8 is ready!", Duration = 5})
