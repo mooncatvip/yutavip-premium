@@ -1,0 +1,30 @@
+-- [[ YUTA HUB LOGO - FIXED PERSISTENCE ]]
+-- [[ DESIGNED BY GEMINI 3 FLASH | FOR POCO C71 ]]
+
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local LogoButton = Instance.new("TextButton", ScreenGui)
+
+-- 1. THIẾT KẾ LOGO "YUTA HUB" (VÀNG ĐẬM)
+LogoButton.Name = "YutaLogo_Fixed"
+LogoButton.Size = UDim2.new(0, 110, 0, 48) -- Kích thước chuẩn từ ảnh
+LogoButton.Position = UDim2.new(0, 20, 0.5, -24) -- Vị trí ban đầu
+LogoButton.BackgroundColor3 = Color3.fromRGB(255, 215, 0) -- Vàng chuẩn YUTA
+LogoButton.Text = "YUTA HUB"
+LogoButton.Font = Enum.Font.SourceSansBold
+LogoButton.TextSize = 20
+LogoButton.Draggable = true -- Có thể kéo thả (không lo che nút game)
+Instance.new("UICorner", LogoButton).CornerRadius = UDim.new(0, 12)
+
+-- 2. HIỆU ỨNG VIỀN SÁNG (NHƯ ẢNH)
+local Stroke = Instance.new("UIStroke", LogoButton)
+Stroke.Thickness = 2
+Stroke.Color = Color3.fromRGB(255, 255, 255) -- Viền trắng sáng
+Stroke.Transparency = 0.3
+
+-- 3. LOGIC PERSISTENCE - KHÔNG BAO GIỜ MẤT
+-- Nút này chỉ dùng để di chuyển và hiển thị tên Hub.
+-- Để kết nối với menu chính, hãy thêm logic Click vào đây.
+LogoButton.MouseButton1Click:Connect(function()
+    print("Yuta Hub Logo Clicked - Add menu toggle here")
+    -- game.CoreGui:FindFirstChild("YutaMenu").Visible = not game.CoreGui:FindFirstChild("YutaMenu").Visible
+end)
