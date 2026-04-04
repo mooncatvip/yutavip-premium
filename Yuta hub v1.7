@@ -1,0 +1,140 @@
+-- [[ YUTA HUB: BLOX FRUIT V1.7 - NO KEY VERSION ]]
+-- [[ 100% ENGLISH | SUPPORT ANDROID 5-10 | ULTRA OPTIMIZED ]]
+
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+
+local Window = Fluent:CreateWindow({
+    Title = "YUTA HUB: BLOX FRUIT",
+    SubTitle = "v1.7 [NO KEY]",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = false, -- Disabled for stability on Android 5-10
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl
+})
+
+Fluent:SetTheme("Dark")
+getgenv().FluentScore = Color3.fromRGB(255, 255, 0) 
+
+local Tabs = {
+    Player = Window:AddTab({ Title = "Player Info", Icon = "user" }),
+    Farm = Window:AddTab({ Title = "Auto Farm", Icon = "swords" }),
+    Boss = Window:AddTab({ Title = "Boss/Elite", Icon = "skull" }),
+    Race = Window:AddTab({ Title = "Race V2-V4", Icon = "zap" }),
+    Items = Window:AddTab({ Title = "Full Items", Icon = "package" }),
+    Sea = Window:AddTab({ Title = "Sea Events", Icon = "waves" }),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
+}
+
+-- ==========================================
+-- 1. PLAYER INFO (LIVE DATA)
+-- ==========================================
+Tabs.Player:AddSection("Live Statistics")
+local Lvl = Tabs.Player:AddParagraph({Title = "Level: ", Content = "Updating..."})
+local Bel = Tabs.Player:AddParagraph({Title = "Beli: ", Content = "Updating..."})
+local Fra = Tabs.Player:AddParagraph({Title = "Fragments: ", Content = "Updating..."})
+local Bou = Tabs.Player:AddParagraph({Title = "Bounty: ", Content = "Updating..."})
+
+task.spawn(function()
+    while task.wait(2) do
+        pcall(function()
+            local p = game.Players.LocalPlayer
+            Lvl:SetTitle("Level: " .. tostring(p.Data.Level.Value))
+            Bel:SetTitle("Beli: $" .. tostring(p.Data.Beli.Value))
+            Fra:SetTitle("Fragments: " .. tostring(p.Data.Fragments.Value))
+            Bou:SetTitle("Bounty: " .. tostring(p.leaderstats["Bounty/Honor"].Value))
+        end)
+    end
+end)
+
+-- ==========================================
+-- 2. AUTO FARM (LEVEL, BONE, KATAKURI)
+-- ==========================================
+Tabs.Farm:AddSection("Main Progression")
+Tabs.Farm:AddToggle("AutoFarm", {Title = "Auto Farm Level", Default = false})
+Tabs.Farm:AddToggle("AutoBone", {Title = "Auto Farm Bone", Default = false})
+
+Tabs.Farm:AddSection("Katakuri Farm")
+Tabs.Farm:AddToggle("KataV1", {Title = "Auto Cake Prince (V1)", Default = false})
+Tabs.Farm:AddToggle("KataV2", {Title = "Auto Dough King (V2)", Default = false})
+
+Tabs.Farm:AddSection("Combat Tools")
+Tabs.Farm:AddToggle("FastAttack", {Title = "Super Fast Attack", Default = false})
+Tabs.Farm:AddToggle("FlyCam", {Title = "Fly Camera Mode", Default = false})
+
+-- ==========================================
+-- 3. BOSS & ELITE
+-- ==========================================
+Tabs.Boss:AddSection("Elite Hunter")
+Tabs.Boss:AddToggle("AutoElite", {Title = "Auto Elite Hunter", Default = false})
+Tabs.Boss:AddSection("Status")
+Tabs.Boss:AddButton({Title = "Check Boss Alive", Callback = function() end})
+
+-- ==========================================
+-- 4. RACE V2-V4 (ALL RACES)
+-- ==========================================
+Tabs.Race:AddSection("Race Evolution")
+Tabs.Race:AddToggle("AutoV2", {Title = "Auto Quest V2", Default = false})
+Tabs.Race:AddToggle("AutoV3", {Title = "Auto Quest V3", Default = false})
+
+Tabs.Race:AddSection("Race Awakening V4")
+Tabs.Race:AddToggle("AutoTrial", {Title = "Auto Complete Trial", Default = false})
+Tabs.Race:AddToggle("AutoTrain", {Title = "Auto Training Gear", Default = false})
+Tabs.Race:AddDropdown("SelectRace", {
+    Title = "Select Your Race",
+    Values = {"Human", "Mink", "Fishman", "Skypian", "Ghoul", "Cyborg"},
+    Default = 1,
+})
+
+-- ==========================================
+-- 5. FULL ITEMS (CDK, SOUL GUITAR, MELEE)
+-- ==========================================
+Tabs.Items:AddSection("Mythical Weapons")
+Tabs.Items:AddToggle("CDK", {Title = "Auto Get Cursed Dual Katana", Default = false})
+Tabs.Items:AddToggle("SGT", {Title = "Auto Get Soul Guitar", Default = false})
+
+Tabs.Items:AddSection("Melee Styles")
+Tabs.Items:AddToggle("GodHuman", {Title = "Auto Get Godhuman", Default = false})
+Tabs.Items:AddToggle("Sanguine", {Title = "Auto Get Sanguine Art", Default = false})
+
+-- ==========================================
+-- 6. SETTINGS (PERFORMANCE & TROLL)
+-- ==========================================
+Tabs.Settings:AddSection("24/7 AFK Optimization")
+
+Tabs.Settings:AddToggle("AlwaysDay", {Title = "Always Day", Default = true})
+:OnChanged(function(v)
+    _G.AlwaysDay = v
+    task.spawn(function()
+        while _G.AlwaysDay do
+            game.Lighting.ClockTime = 12
+            task.wait(5)
+        end
+    end)
+end)
+
+Tabs.Settings:AddButton({
+    Title = "Ultra Fix Lag (24/7 Mode)",
+    Description = "Remove Textures, Fog, Clouds for low-end devices",
+    Callback = function()
+        game.Lighting.FogEnd = 9e9
+        game.Lighting.GlobalShadows = false
+        for i,v in pairs(game:GetDescendants()) do
+            if v:IsA("BasePart") or v:IsA("MeshPart") then
+                v.Material = "Plastic"
+                v.Reflectance = 0
+            elseif v:IsA("Decal") or v:IsA("Texture") or v:IsA("Clouds") or v:IsA("Atmosphere") then
+                v:Destroy()
+            end
+        end
+        settings().Rendering.QualityLevel = 1
+        Fluent:Notify({Title = "YUTA HUB", Content = "Optimization Finished!"})
+    end
+})
+
+Tabs.Settings:AddSection("Movement (Max 500)")
+Tabs.Settings:AddSlider("Speed", {Title = "Walk Speed", Default = 16, Min = 1, Max = 500, Callback = function(v) game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v end})
+Tabs.Settings:AddSlider("Jump", {Title = "Jump Power", Default = 50, Min = 1, Max = 500, Callback = function(v) game.Players.LocalPlayer.Character.Humanoid.JumpPower = v end})
+
+Tabs.Settings:AddSection("Safety & Troll")
+Tabs.Settings:AddToggle("AntiAFK", {Title = "Anti
