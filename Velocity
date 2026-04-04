@@ -1,0 +1,134 @@
+-- [[ YUTA HUB: BLOX FRUIT V2.0 PREMIUM ]]
+-- [[ STYLE: BANANA HUB PREMIUM CLONE - ENGLISH VERSION ]]
+-- [[ NO EMOJI | NO KEY | RED & WHITE THEME ]]
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "YUTA HUB: BLOX FRUIT V2.0",
+   LoadingTitle = "Yuta Premium Systems",
+   LoadingSubtitle = "by YUTA",
+   ConfigurationSaving = { Enabled = true, FolderName = "YutaHub" },
+   Discord = { Enabled = false },
+   KeySystem = false 
+})
+
+-- SET THEME TO RED
+Rayfield:SetTheme("Red")
+
+-- [[ SIDEBAR TABS ]]
+local PlayerTab = Window:CreateTab("Player Info", 4483362458)
+local FarmTab = Window:CreateTab("Main Farm", 4483362458)
+local BossTab = Window:CreateTab("Boss Farm", 4483362458)
+local ItemTab = Window:CreateTab("Items Farm", 4483362458)
+local SeaTab = Window:CreateTab("Sea Events", 4483362458)
+local RaceTab = Window:CreateTab("Mirage/Race V4", 4483362458)
+local ConfigTab = Window:CreateTab("Combat Config", 4483362458)
+local SettingTab = Window:CreateTab("Settings", 4483362458)
+
+-- ==========================================
+-- 1. PLAYER INFO (LIVE DATA)
+-- ==========================================
+PlayerTab:CreateSection("Your Server Stats")
+local MyName = PlayerTab:CreateLabel("Name: " .. game.Players.LocalPlayer.Name)
+local MyLevel = PlayerTab:CreateLabel("Level: Loading...")
+local MyMoney = PlayerTab:CreateLabel("Money: Loading...")
+local MyFragments = PlayerTab:CreateLabel("Fragments: Loading...")
+local MyBounty = PlayerTab:CreateLabel("Bounty: Loading...")
+local ServerTime = PlayerTab:CreateLabel("Time in Server: 00:00:00")
+
+task.spawn(function()
+    local StartTime = tick()
+    while task.wait(1) do
+        pcall(function()
+            local p = game.Players.LocalPlayer
+            MyLevel:Set("Level: " .. tostring(p.Data.Level.Value))
+            MyMoney:Set("Money: $" .. tostring(p.Data.Beli.Value))
+            MyFragments:Set("Fragments: " .. tostring(p.Data.Fragments.Value))
+            MyBounty:Set("Bounty: " .. tostring(p.leaderstats["Bounty/Honor"].Value))
+            
+            local Duration = tick() - StartTime
+            local Hours = math.floor(Duration / 3600)
+            local Mins = math.floor((Duration % 3600) / 60)
+            local Secs = math.floor(Duration % 60)
+            ServerTime:Set(string.format("Time in Server: %02d:%02d:%02d", Hours, Mins, Secs))
+        end)
+    end
+end)
+
+PlayerTab:CreateSection("Other Players")
+local PlayerList = PlayerTab:CreateDropdown({
+   Name = "Server Players List",
+   Options = {},
+   CurrentOption = {"Scanning..."},
+   Callback = function(v) end,
+})
+
+task.spawn(function()
+    while task.wait(5) do
+        local Names = {}
+        for _,v in pairs(game.Players:GetPlayers()) do
+            table.insert(Names, v.Name .. " [Lvl " .. tostring(v.Data.Level.Value) .. "]")
+        end
+        PlayerList:Refresh(Names)
+    end
+end)
+
+-- ==========================================
+-- 2. MAIN FARM
+-- ==========================================
+FarmTab:CreateSection("Auto Leveling")
+FarmTab:CreateToggle({Name = "Auto Farm Level", Callback = function(v) _G.AutoFarm = v end})
+FarmTab:CreateToggle({Name = "Auto Farm Nearest", Callback = function(v) end})
+
+FarmTab:CreateSection("Katakuri Progression")
+FarmTab:CreateToggle({Name = "Auto Cake Prince (V1)", Callback = function(v) end})
+FarmTab:CreateToggle({Name = "Auto Dough King (V2)", Callback = function(v) end})
+
+-- ==========================================
+-- 3. BOSS FARM (BOSS SELECTOR)
+-- ==========================================
+BossTab:CreateSection("Boss Targeting")
+BossTab:CreateDropdown({
+   Name = "Select Target Boss",
+   Options = {"Graybeard","Yeti","Vice Admiral","Swan","Rip_Indra","Katakuri"},
+   CurrentOption = {"Graybeard"},
+   Callback = function(Option) _G.SelectedBoss = Option end,
+})
+BossTab:CreateToggle({Name = "Auto Farm Selected Boss", Callback = function(v) end})
+
+-- ==========================================
+-- 4. SEA EVENTS
+-- ==========================================
+SeaTab:CreateSection("Sea Farming")
+SeaTab:CreateToggle({Name = "Auto Sea Events", Callback = function(v) end})
+SeaTab:CreateToggle({Name = "Auto Terror Shark", Callback = function(v) end})
+SeaTab:CreateToggle({Name = "Auto Ship Farm", Callback = function(v) end})
+
+-- ==========================================
+-- 5. SETTINGS & OPTIMIZATION
+-- ==========================================
+SettingTab:CreateSection("Device Optimization")
+SettingTab:CreateButton({
+   Name = "ULTRA FIX LAG (24/7 MODE)",
+   Callback = function()
+       game.Lighting.FogEnd = 9e9
+       game.Lighting.GlobalShadows = false
+       for i,v in pairs(game:GetDescendants()) do
+           if v:IsA("BasePart") or v:IsA("MeshPart") then v.Material = "Plastic" end
+           if v:IsA("Decal") or v:IsA("Texture") then v:Destroy() end
+       end
+       setfpscap(30)
+       Rayfield:Notify({Title = "YUTA HUB", Content = "Optimization Finished!"})
+   end,
+})
+
+SettingTab:CreateSlider({
+   Name = "Walk Speed",
+   Range = {16, 500},
+   Increment = 1,
+   CurrentValue = 16,
+   Callback = function(v) game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v end,
+})
+
+Rayfield:Notify({Title = "YUTA HUB PREMIUM", Content = "English
