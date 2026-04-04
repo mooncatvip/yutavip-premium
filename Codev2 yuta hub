@@ -1,0 +1,65 @@
+-- [[ YUTA HUB V2.1.1: FINAL VERSION FROM YUTA'S GITHUB ]]
+-- [[ UI STYLE: KAVO SIDEBAR (FIXED) | 100% ENGLISH ]]
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("YUTA HUB - PREMIUM EDITION", "DarkTheme")
+
+-- [[ TABS FROM YOUR COMMIT ]]
+local MainTab = Window:NewTab("Main Farm")
+local SeaTab = Window:NewTab("Sea Events")
+local RaceTab = Window:NewTab("Race V4")
+local ItemTab = Window:NewTab("Items Farm")
+local BossTab = Window:NewTab("Boss Farm")
+local LocalTab = Window:NewTab("Local Player")
+local SettingTab = Window:NewTab("Settings") -- Luôn ở cuối như ông muốn
+
+-- 1. MAIN & BOSS FARM (TỪ CODE TRÊN GITHUB CỦA ÔNG)
+local MainSec = MainTab:NewSection("Progression")
+MainSec:NewToggle("Auto Farm Level", "Fast Quest", function(v) _G.AutoFarm = v end)
+local BossSec = BossTab:NewSection("Boss Hunting")
+BossSec:NewToggle("Auto All Bosses", "World Bosses", function(v) _G.AutoBoss = v end)
+
+-- 2. RACE V4 & SPECIALS (DÒNG 28-34 TRONG ẢNH)
+local RaceSec = RaceTab:NewSection("Awakening")
+RaceSec:NewToggle("Auto Find Mirage", "Search Mirage", function(v) _G.FindMirage = v end)
+RaceSec:NewToggle("Auto Trial V4", "Complete Trial", function(v) _G.AutoTrial = v end)
+
+-- 3. SETTINGS (DÒNG 36-51 TRONG ẢNH: FULL BRIGHT, NO CHAT, FIX LAG)
+local SetSec = SettingTab:NewSection("Optimization")
+SetSec:NewToggle("Full Bright", "Always Bright (Sáng vl)", function(v)
+    game:GetService("Lighting").Ambient = v and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(0, 0, 0)
+    game:GetService("Lighting").Brightness = v and 2 or 1
+end)
+SetSec:NewButton("Hide Chat", "Disable Chat", function()
+    game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Chat, false)
+end)
+SetSec:NewButton("ULTRA FIX LAG (POCO)", function()
+    for i,v in pairs(game:GetDescendants()) do
+        if v:IsA("BasePart") then v.Material = "Plastic" end
+        if v:IsA("Decal") then v:Destroy() end
+    end
+end)
+
+-- [[ LOGO "YUTA HUB" DI CHUYỂN & BẬT TẮT ]]
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local MainFrame = Instance.new("Frame", ScreenGui)
+local ToggleText = Instance.new("TextButton", MainFrame)
+
+MainFrame.Name = "YutaLogoFrame"
+MainFrame.Position = UDim2.new(0, 15, 0.5, 0)
+MainFrame.Size = UDim2.new(0, 110, 0, 45)
+MainFrame.BackgroundTransparency = 1
+MainFrame.Draggable = true 
+MainFrame.Active = true
+
+ToggleText.Name = "YutaText"
+ToggleText.Text = "YUTA HUB"
+ToggleText.Font = Enum.Font.SourceSansBold
+ToggleText.TextColor3 = Color3.fromRGB(255, 215, 0)
+ToggleText.Size = UDim2.new(1, 0, 1, 0)
+ToggleText.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ToggleText.BackgroundTransparency = 0.3
+local Corner = Instance.new("UICorner", ToggleText)
+Corner.CornerRadius = UDim.new(0, 10)
+
+ToggleText.MouseButton1Click:Connect(function() Library:ToggleUI() end)
