@@ -1,0 +1,153 @@
+-- [[ YUTA HUB : FINAL EDITION ]]
+-- [[ FIX: BUTTONS DISPLAYED | PASSWORD MODE | AUTO-LOGIN ]]
+
+local CoreGui = game:GetService("CoreGui")
+local LPlayer = game:GetService("Players").LocalPlayer
+
+-- Xoá bản cũ để không bị đè GUI
+if CoreGui:FindFirstChild("Yuta_Final_Project") then CoreGui.Yuta_Final_Project:Destroy() end
+
+local MainGui = Instance.new("ScreenGui", CoreGui)
+MainGui.Name = "Yuta_Final_Project"
+
+-- ==========================================
+-- [ 1. MENU CHÍNH (SIDEBAR STYLE) ]
+-- ==========================================
+local MainFrame = Instance.new("Frame", MainGui)
+MainFrame.Size = UDim2.new(0, 550, 0, 320)
+MainFrame.Position = UDim2.new(0.5, -275, 0.5, -160)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+MainFrame.Visible = false
+MainFrame.Active = true
+MainFrame.Draggable = true
+Instance.new("UICorner", MainFrame)
+local MainStroke = Instance.new("UIStroke", MainFrame)
+MainStroke.Color = Color3.fromRGB(255, 0, 0)
+
+-- Logo YV
+local LogoM = Instance.new("TextLabel", MainFrame)
+LogoM.Size = UDim2.new(0, 80, 0, 40)
+LogoM.Position = UDim2.new(0, 15, 0, 5)
+LogoM.BackgroundTransparency = 1
+LogoM.RichText = true
+LogoM.Text = '<font color="#FF0000">Y</font><font color="#FFFFFF">V</font> <font color="#FFFFFF">HUB</font>'
+LogoM.Font = "GothamBold"
+LogoM.TextSize = 22
+
+-- Sidebar & Tab (Rút gọn để ông copy cho nhẹ máy)
+local Sidebar = Instance.new("ScrollingFrame", MainFrame)
+Sidebar.Size = UDim2.new(0, 140, 1, -60)
+Sidebar.Position = UDim2.new(0, 10, 0, 50)
+Sidebar.BackgroundTransparency = 1
+Sidebar.ScrollBarThickness = 0
+local SLayout = Instance.new("UIListLayout", Sidebar)
+SLayout.Padding = UDim.new(0, 5)
+
+local Container = Instance.new("Frame", MainFrame)
+Container.Size = UDim2.new(1, -170, 1, -20)
+Container.Position = UDim2.new(0, 160, 0, 10)
+Container.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Instance.new("UICorner", Container)
+
+local Tabs = {"Farm", "Item Farm", "Sea Event", "Race V2-V4", "Dragon Dojo", "Volcanic Island", "Raid", "Combat", "Settings", "Âm nhạc"}
+for _, t in pairs(Tabs) do
+    local B = Instance.new("TextButton", Sidebar)
+    B.Size = UDim2.new(1, -5, 0, 32)
+    B.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    B.Text = "  " .. t
+    B.TextColor3 = Color3.fromRGB(200, 200, 200)
+    B.Font = "GothamMedium"
+    B.TextSize = 13
+    B.TextXAlignment = "Left"
+    Instance.new("UICorner", B)
+end
+
+-- ==========================================
+-- [ 2. BẢNG KEY (FIX NÚT BẤM) ]
+-- ==========================================
+local KeyFrame = Instance.new("Frame", MainGui)
+KeyFrame.Size = UDim2.new(0, 450, 0, 280)
+KeyFrame.Position = UDim2.new(0.5, -225, 0.5, -140)
+KeyFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+Instance.new("UICorner", KeyFrame)
+local KeyStroke = Instance.new("UIStroke", KeyFrame)
+KeyStroke.Color = Color3.fromRGB(255, 0, 0)
+
+local KeyTitle = Instance.new("TextLabel", KeyFrame)
+KeyTitle.Size = UDim2.new(1, 0, 0, 60)
+KeyTitle.BackgroundTransparency = 1
+KeyTitle.RichText = true
+KeyTitle.Text = '<font color="#FF0000">YUTA</font> <font color="#FFFFFF">HUB : KEY SYSTEM</font>'
+KeyTitle.Font = "GothamBold"
+KeyTitle.TextSize = 22
+
+-- Ô nhập Key (Ẩn text bằng dấu •)
+local Input = Instance.new("TextBox", KeyFrame)
+Input.Size = UDim2.new(0.9, 0, 0, 50)
+Input.Position = UDim2.new(0.05, 0, 0.4, 0)
+Input.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Input.PlaceholderText = "Dán Key tại đây..."
+Input.Text = ""
+Input.TextPassword = true -- BẢO MẬT TUYỆT ĐỐI
+Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+Input.Font = "Gotham"
+Input.TextSize = 16
+Instance.new("UICorner", Input)
+
+-- TẠO NÚT GET KEY (Bên Trái)
+local GetKeyBtn = Instance.new("TextButton", KeyFrame)
+GetKeyBtn.Name = "GetKeyBtn"
+GetKeyBtn.Text = "GET KEY"
+GetKeyBtn.Size = UDim2.new(0.43, 0, 0, 45)
+GetKeyBtn.Position = UDim2.new(0.05, 0, 0.7, 0)
+GetKeyBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+GetKeyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+GetKeyBtn.Font = "GothamBold"
+GetKeyBtn.TextSize = 14
+Instance.new("UICorner", GetKeyBtn)
+
+-- TẠO NÚT VERIFY (Bên Phải - Đỏ rực)
+local VerifyBtn = Instance.new("TextButton", KeyFrame)
+VerifyBtn.Name = "VerifyBtn"
+VerifyBtn.Text = "✓ VERIFY"
+VerifyBtn.Size = UDim2.new(0.43, 0, 0, 45)
+VerifyBtn.Position = UDim2.new(0.52, 0, 0.7, 0)
+VerifyBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+VerifyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+VerifyBtn.Font = "GothamBold"
+VerifyBtn.TextSize = 14
+Instance.new("UICorner", VerifyBtn)
+
+-- ==========================================
+-- [ 3. LOGIC XỬ LÝ ]
+-- ==========================================
+local function Unlock()
+    KeyFrame:Destroy()
+    MainFrame.Visible = true
+end
+
+-- Tự động mở nếu là nick của ông (YUTA)
+if LPlayer.Name == "bebo_suacute80" then
+    Unlock()
+end
+
+GetKeyBtn.MouseButton1Click:Connect(function()
+    setclipboard("Link_Của_Yuta_Hub") -- Ông dán link web của ông vào đây
+    GetKeyBtn.Text = "COPIED LINK!"
+    task.wait(2)
+    GetKeyBtn.Text = "GET KEY"
+end)
+
+VerifyBtn.MouseButton1Click:Connect(function()
+    local val = Input.Text
+    if val == "YutaHub_Final_Infinite" or string.match(val, "^YutaHub_Final_6h_") then
+        VerifyBtn.Text = "SUCCESS!"
+        VerifyBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 0)
+        task.wait(1)
+        Unlock()
+    else
+        VerifyBtn.Text = "WRONG KEY!"
+        task.wait(1.5)
+        VerifyBtn.Text = "✓ VERIFY"
+    end
+end)
