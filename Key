@@ -1,0 +1,79 @@
+local UIS = game:GetService("UserInputService")
+local TS = game:GetService("TweenService")
+local CoreGui = game:GetService("CoreGui")
+
+-- 1. CHỐNG NHÂN BẢN (Xóa bản cũ nếu đang chạy)
+if CoreGui:FindFirstChild("YutaHub_Final") then 
+    CoreGui.YutaHub_Final:Destroy() 
+end
+
+-- 2. ĐỊNH NGHĨA KEY CHUẨN
+local CorrectKey = "longhihiscripts"
+local HasKey = false
+
+-- 3. TẠO SCREEN GUI
+local Screen = Instance.new("ScreenGui", CoreGui)
+Screen.Name = "YutaHub_Final"
+
+-- 4. KHUNG NHẬP KEY (Hiện ra trước)
+local KeyFrame = Instance.new("Frame", Screen)
+KeyFrame.Size = UDim2.new(0, 300, 0, 150)
+KeyFrame.Position = UDim2.new(0.5, -150, 0.5, -75)
+KeyFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+KeyFrame.BackgroundTransparency = 0.2
+Instance.new("UICorner", KeyFrame)
+local KeyStroke = Instance.new("UIStroke", KeyFrame)
+KeyStroke.Color = Color3.fromRGB(255, 0, 0) -- Viền đỏ đặc trưng
+
+local KeyInput = Instance.new("TextBox", KeyFrame)
+KeyInput.PlaceholderText = "Nhập Key vào đây..."
+KeyInput.Size = UDim2.new(0.8, 0, 0, 40)
+KeyInput.Position = UDim2.new(0.1, 0, 0.2, 0)
+KeyInput.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyInput.Text = ""
+Instance.new("UICorner", KeyInput)
+
+local SubmitBtn = Instance.new("TextButton", KeyFrame)
+SubmitBtn.Text = "XÁC NHẬN"
+SubmitBtn.Size = UDim2.new(0.6, 0, 0, 35)
+SubmitBtn.Position = UDim2.new(0.2, 0, 0.6, 0)
+SubmitBtn.BackgroundColor3 = Color3.fromRGB(255, 160, 0) -- Màu cam Bear Hub
+SubmitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+Instance.new("UICorner", SubmitBtn)
+
+-- 5. KHUNG CHÍNH CỦA HUB (Ẩn đi lúc đầu)
+local Main = Instance.new("Frame", Screen)
+Main.Size = UDim2.new(0, 550, 0, 310)
+Main.Position = UDim2.new(0.5, -275, 0.5, -155)
+Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Main.BackgroundTransparency = 0.35 -- Mờ xuyên thấu ông thích
+Main.Visible = false
+Main.Active = true
+Main.Draggable = true -- Có thể di chuyển
+Instance.new("UICorner", Main)
+local MainStroke = Instance.new("UIStroke", Main)
+MainStroke.Color = Color3.fromRGB(255, 0, 0)
+
+-- Tiêu đề Hub
+local Title = Instance.new("TextLabel", Main)
+Title.Text = "🔥 YUTA HUB : " .. CorrectKey
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.BackgroundTransparency = 1
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Font = "GothamBold"
+Title.TextSize = 16
+
+-- LOGIC KIỂM TRA KEY
+SubmitBtn.MouseButton1Click:Connect(function()
+    if KeyInput.Text == CorrectKey then
+        KeyFrame.Visible = false
+        Main.Visible = true
+        print("Key Đúng! Chào mừng YUTA.")
+    else
+        KeyInput.Text = ""
+        KeyInput.PlaceholderText = "SAI KEY RỒI ÔNG ƠI!"
+        task.wait(1)
+        KeyInput.PlaceholderText = "Nhập Key vào đây..."
+    end
+end)
