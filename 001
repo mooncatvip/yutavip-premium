@@ -1,0 +1,95 @@
+-- [[ YUTA HUB : KEY SYSTEM VER 2.0 ]]
+local CoreGui = game:GetService("CoreGui")
+local LPlayer = game:GetService("Players").LocalPlayer
+
+if CoreGui:FindFirstChild("Yuta_KeySystem") then CoreGui.Yuta_KeySystem:Destroy() end
+
+local MainGui = Instance.new("ScreenGui", CoreGui)
+MainGui.Name = "Yuta_KeySystem"
+
+-- --- KHUNG CHÍNH (THEO STYLE BANANA CAT) ---
+local MainFrame = Instance.new("Frame", MainGui)
+MainFrame.Size = UDim2.new(0, 420, 0, 300)
+MainFrame.Position = UDim2.new(0.5, -210, 0.5, -150)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 10)
+local Stroke = Instance.new("UIStroke", MainFrame)
+Stroke.Color = Color3.fromRGB(255, 180, 0) -- Màu vàng đặc trưng
+Stroke.Thickness = 2
+
+-- --- BỘ TỰ ĐỘNG XẾP HÀNG (CHÌA KHÓA ĐỂ HIỆN NÚT) ---
+local Layout = Instance.new("UIListLayout", MainFrame)
+Layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+Layout.Padding = UDim.new(0, 12) -- Khoảng cách giữa các ô
+Layout.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- 1. TIÊU ĐỀ (LAYOUT ORDER 1)
+local Title = Instance.new("TextLabel", MainFrame)
+Title.Text = "YUTA HUB"
+Title.Size = UDim2.new(1, 0, 0, 50)
+Title.TextColor3 = Color3.fromRGB(255, 200, 0)
+Title.Font = "GothamBold"
+Title.TextSize = 20
+Title.BackgroundTransparency = 1
+Title.LayoutOrder = 1
+
+-- 2. THÔNG TIN USER (LAYOUT ORDER 2)
+local Profile = Instance.new("Frame", MainFrame)
+Profile.Size = UDim2.new(0.9, 0, 0, 50)
+Profile.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Profile.LayoutOrder = 2
+Instance.new("UICorner", Profile)
+local UserText = Instance.new("TextLabel", Profile)
+UserText.Text = "👤 Chào bạn: " .. LPlayer.Name
+UserText.Size = UDim2.new(1, -20, 1, 0)
+UserText.Position = UDim2.new(0, 10, 0, 0)
+UserText.TextColor3 = Color3.fromRGB(255, 255, 255)
+UserText.BackgroundTransparency = 1
+UserText.TextXAlignment = "Left"
+
+-- 3. Ô NHẬP KEY (LAYOUT ORDER 3)
+local Input = Instance.new("TextBox", MainFrame)
+Input.Size = UDim2.new(0.9, 0, 0, 45)
+Input.PlaceholderText = "🔑 Dán Key YUTA-6H-... vào đây"
+Input.Text = ""
+Input.TextPassword = true -- Bảo mật
+Input.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+Input.LayoutOrder = 3
+Instance.new("UICorner", Input)
+
+-- 4. KHUNG CHỨA NÚT (LAYOUT ORDER 4)
+local BtnFrame = Instance.new("Frame", MainFrame)
+BtnFrame.Size = UDim2.new(0.9, 0, 0, 50)
+BtnFrame.BackgroundTransparency = 1
+BtnFrame.LayoutOrder = 4
+
+local GetKeyBtn = Instance.new("TextButton", BtnFrame)
+GetKeyBtn.Text = "🔗 GET KEY"
+GetKeyBtn.Size = UDim2.new(0.48, 0, 1, 0)
+GetKeyBtn.BackgroundColor3 = Color3.fromRGB(40, 35, 10)
+GetKeyBtn.TextColor3 = Color3.fromRGB(255, 200, 0)
+GetKeyBtn.Font = "GothamBold"
+Instance.new("UICorner", GetKeyBtn)
+
+local VerifyBtn = Instance.new("TextButton", BtnFrame)
+VerifyBtn.Text = "✔️ VERIFY"
+VerifyBtn.Size = UDim2.new(0.48, 0, 1, 0)
+VerifyBtn.Position = UDim2.new(0.52, 0, 0, 0)
+VerifyBtn.BackgroundColor3 = Color3.fromRGB(255, 180, 0)
+VerifyBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+VerifyBtn.Font = "GothamBold"
+Instance.new("UICorner", VerifyBtn)
+
+-- --- LOGIC ---
+VerifyBtn.MouseButton1Click:Connect(function()
+    if Input.Text == "YutaHub_Final_Infinite" then
+        VerifyBtn.Text = "SUCCESS!"
+        task.wait(1)
+        MainFrame:Destroy()
+    else
+        VerifyBtn.Text = "WRONG KEY!"
+        task.wait(1)
+        VerifyBtn.Text = "✔️ VERIFY"
+    end
+end)
