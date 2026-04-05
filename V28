@@ -1,0 +1,167 @@
+local CoreGui = game:GetService("CoreGui")
+local TS = game:GetService("TweenService")
+
+if CoreGui:FindFirstChild("YutaHub_Final_Pro") then CoreGui.YutaHub_Final_Pro:Destroy() end
+
+local Screen = Instance.new("ScreenGui", CoreGui)
+Screen.Name = "YutaHub_Final_Pro"
+
+-- 1. HỆ THỐNG KEY ẨN
+local Keys = { ["YutaHub_Final_6h_freemium"] = 21600, ["YutaHub_Final_Infinite"] = math.huge }
+local KeyUI = Instance.new("Frame", Screen)
+KeyUI.Size = UDim2.new(0, 320, 0, 160)
+KeyUI.Position = UDim2.new(0.5, -160, 0.5, -80)
+KeyUI.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Instance.new("UICorner", KeyUI)
+local KStroke = Instance.new("UIStroke", KeyUI)
+KStroke.Color = Color3.fromRGB(255, 0, 0)
+
+local KInput = Instance.new("TextBox", KeyUI)
+KInput.PlaceholderText = "Nhập Key Yuta Hub..."
+KInput.Size = UDim2.new(0.8, 0, 0, 35)
+KInput.Position = UDim2.new(0.1, 0, 0.3, 0)
+KInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+KInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+Instance.new("UICorner", KInput)
+
+local KBtn = Instance.new("TextButton", KeyUI)
+KBtn.Text = "KÍCH HOẠT"
+KBtn.Size = UDim2.new(0.5, 0, 0, 35)
+KBtn.Position = UDim2.new(0.25, 0, 0.7, 0)
+KBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+KBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+Instance.new("UICorner", KBtn)
+
+-- 2. KHUNG CHÍNH (FRAMEWORK BANANA CAT - CHIA TAB)
+local Main = Instance.new("Frame", Screen)
+Main.Size = UDim2.new(0, 580, 0, 350)
+Main.Position = UDim2.new(0.5, -290, 0.5, -175)
+Main.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+Main.BackgroundTransparency = 0.25
+Main.Visible = false
+Main.Active = true
+Main.Draggable = true
+Instance.new("UICorner", Main)
+local MStroke = Instance.new("UIStroke", Main)
+MStroke.Color = Color3.fromRGB(255, 0, 0)
+
+-- TIÊU ĐỀ RAINBOW
+local Title = Instance.new("TextLabel", Main)
+Title.Text = "YUTA HUB : Blox Fruits"
+Title.Size = UDim2.new(1, 0, 0, 45)
+Title.BackgroundTransparency = 1
+Title.Font = "GothamBold"
+Title.TextSize = 18
+task.spawn(function()
+    while task.wait() do Title.TextColor3 = Color3.fromHSV(tick() % 5 / 5, 0.8, 1) end
+end)
+
+-- 3. HỆ THỐNG SIDEBAR (MENU RIÊNG)
+local Sidebar = Instance.new("ScrollingFrame", Main)
+Sidebar.Size = UDim2.new(0, 150, 1, -60)
+Sidebar.Position = UDim2.new(0, 10, 0, 50)
+Sidebar.BackgroundTransparency = 1
+Sidebar.ScrollBarThickness = 0
+local SLayout = Instance.new("UIListLayout", Sidebar)
+SLayout.Padding = UDim.new(0, 5)
+
+local Content = Instance.new("Frame", Main)
+Content.Size = UDim2.new(1, -180, 1, -65)
+Content.Position = UDim2.new(0, 170, 0, 55)
+Content.BackgroundTransparency = 1
+
+local Tabs = {}
+local function CreateTab(name)
+    local Btn = Instance.new("TextButton", Sidebar)
+    Btn.Size = UDim2.new(1, 0, 0, 32)
+    Btn.Text = name
+    Btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Btn.TextColor3 = Color3.fromRGB(200, 200, 200)
+    Btn.Font = "GothamMedium"
+    Btn.TextSize = 13
+    Instance.new("UICorner", Btn)
+
+    local Page = Instance.new("ScrollingFrame", Content)
+    Page.Size = UDim2.new(1, 0, 1, 0)
+    Page.BackgroundTransparency = 1
+    Page.Visible = false
+    Page.ScrollBarThickness = 2
+    local PLayout = Instance.new("UIListLayout", Page)
+    PLayout.Padding = UDim.new(0, 8)
+
+    Btn.MouseButton1Click:Connect(function()
+        for _, v in pairs(Content:GetChildren()) do v.Visible = false end
+        for _, b in pairs(Sidebar:GetChildren()) do if b:IsA("TextButton") then b.TextColor3 = Color3.fromRGB(200, 200, 200) b.BackgroundColor3 = Color3.fromRGB(30, 30, 30) end end
+        Page.Visible = true
+        Btn.TextColor3 = Color3.fromRGB(255, 0, 0)
+        Btn.BackgroundColor3 = Color3.fromRGB(45, 10, 10)
+    end)
+    return Page
+end
+
+-- TẠO CÁC MENU RIÊNG BIỆT
+local TabFarm = CreateTab(" Farm")
+local TabItem = CreateTab(" Item Farm")
+local TabRace = CreateTab(" Race V2-V4")
+local TabSea = CreateTab(" Sea Events")
+local TabDojo = CreateTab(" Dragon Dojo")
+local TabMisc = CreateTab(" Missed/Volcanic")
+local TabShop = CreateTab(" Shop/Fruit")
+local TabEsp = CreateTab(" ESP/Player")
+
+-- 4. HÀM TẠO TOGGLE (CHECKBOX ĐỎ)
+local function AddToggle(name, parent)
+    local F = Instance.new("Frame", parent)
+    F.Size = UDim2.new(1, -10, 0, 40)
+    F.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    Instance.new("UICorner", F)
+    
+    local L = Instance.new("TextLabel", F)
+    L.Text = "  " .. name
+    L.Size = UDim2.new(0.8, 0, 1, 0)
+    L.TextColor3 = Color3.fromRGB(255, 255, 255)
+    L.TextXAlignment = "Left"
+    L.BackgroundTransparency = 1
+    
+    local Box = Instance.new("TextButton", F)
+    Box.Text = ""
+    Box.Size = UDim2.new(0, 22, 0, 22)
+    Box.Position = UDim2.new(1, -35, 0.5, -11)
+    Box.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    local BStroke = Instance.new("UIStroke", Box)
+    BStroke.Color = Color3.fromRGB(255, 0, 0)
+    Instance.new("UICorner", Box).CornerRadius = UDim.new(0, 4)
+
+    local on = false
+    Box.MouseButton1Click:Connect(function()
+        on = not on
+        Box.Text = on and "✓" or ""
+        Box.TextColor3 = Color3.fromRGB(255, 0, 0)
+        -- Chèn logic từ Hdanh Hub tại đây
+    end)
+end
+
+-- ĐỔ CHỨC NĂNG VÀO TỪNG MENU
+AddToggle("Auto Farm Level", TabFarm)
+AddToggle("Auto Farm Item", TabItem)
+AddToggle("Auto Farm Sea Event", TabSea)
+AddToggle("Auto Farm Player", TabEsp)
+AddToggle("Auto Farm Missed Items", TabMisc)
+AddToggle("Auto Volcanic Island", TabMisc)
+AddToggle("Auto Dragon Dojo", TabDojo)
+AddToggle("Unlock Race V4", TabRace)
+AddToggle("Unlock Race V2-V3", TabRace)
+AddToggle("Fruit Sniper", TabShop)
+AddToggle("Esp Player", TabEsp)
+
+-- 5. KÍCH HOẠT
+KBtn.MouseButton1Click:Connect(function()
+    if Keys[KInput.Text] then
+        KeyUI:Destroy()
+        Main.Visible = true
+        TabFarm.Visible = true -- Mặc định hiện Tab Farm
+        if Keys[KInput.Text] ~= math.huge then task.delay(Keys[KInput.Text], function() Screen:Destroy() end) end
+    else
+        KInput.PlaceholderText = "KÍCH HOẠT KEY THẤT BẠI!"
+    end
+end)
