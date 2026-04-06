@@ -1,0 +1,128 @@
+local CoreGui = game:GetService("CoreGui")
+local LPlayer = game:GetService("Players").LocalPlayer
+local VirtualUser = game:GetService("VirtualUser")
+
+if CoreGui:FindFirstChild("Yuta_Ultimate") then CoreGui.Yuta_Ultimate:Destroy() end
+local MainGui = Instance.new("ScreenGui", CoreGui)
+MainGui.Name = "Yuta_Ultimate"
+
+-- --- CẤU HÌNH & TRẠNG THÁI ---
+_G.AutoFarm = false
+_G.AutoAttack = false
+_G.Distance = 10 
+
+-- --- HÀM TÌM QUÁI LEVEL (CHỐNG ĐÁNH LUNG TUNG) ---
+local function GetMonster()
+    local myLv = LPlayer.Data.Level.Value
+    local tName = (myLv >= 2700 and "Living Zombie") or (myLv >= 2500 and "Warrior") or "Monster"
+    for _, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+        if v.Name:find(tName) and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then return v end
+    end
+    return nil
+end
+
+-- --- LOGIC CHÍNH: TELE + OMNI-HITBOX + AUTO CLICK ---
+spawn(function()
+    while task.wait() do
+        if _G.AutoFarm then
+            pcall(function()
+                local Target = GetMonster()
+                if Target then
+                    LPlayer.Character.HumanoidRootPart.CFrame = Target.HumanoidRootPart.CFrame * CFrame.new(0, _G.Distance, 0)
+                    for _, p in pairs(Target:GetChildren()) do
+                        if p:IsA("BasePart") then p.CanCollide = false p.Size = Vector3.new(50, 50, 50) end
+                    end
+                    VirtualUser:CaptureController()
+                    VirtualUser:ClickButton1(Vector2.new(851, 158))
+                end
+            end)
+        end
+    end
+end)
+
+-- --- GIAO DIỆN CHUẨN (Style giống ảnh mẫu 100%) ---
+local Main = Instance.new("Frame", MainGui)
+Main.Size = UDim2.new(0, 520, 0, 320) -- Tối ưu kích thước cho mobile
+Main.Position = UDim2.new(0.5, -260, 0.5, -160)
+Main.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+Main.Visible = true -- Mặc định hiện
+Instance.new("UICorner", Main)
+Instance.new("UIStroke", Main).Color = Color3.fromRGB(255, 0, 0)
+
+-- --- THANH TAB (Style ảnh mẫu) ---
+local TabFrame = Instance.new("ScrollingFrame", Main)
+TabFrame.Size = UDim2.new(0, 130, 1, -20)
+TabFrame.Position = UDim2.new(0, 10, 0, 10)
+TabFrame.BackgroundTransparency = 1
+TabFrame.ScrollBarThickness = 0
+local TabList = Instance.new("UIListLayout", TabFrame)
+TabList.Padding = UDim.new(0, 5)
+
+-- --- KHUNG NỘI DUNG ---
+local Container = Instance.new("ScrollingFrame", Main)
+Container.Size = UDim2.new(1, -160, 1, -50)
+Container.Position = UDim2.new(0, 150, 0, 40)
+Container.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Container.CanvasSize = UDim2.new(0, 0, 3, 0)
+local CList = Instance.new("UIListLayout", Container)
+CList.Padding = UDim.new(0, 7)
+
+local SectionTitle = Instance.new("TextLabel", Main)
+SectionTitle.Text = "YUTA HUB - SELECT A TAB"
+SectionTitle.Size = UDim2.new(1, -160, 0, 30)
+SectionTitle.Position = UDim2.new(0, 150, 0, 5)
+SectionTitle.TextColor3 = Color3.fromRGB(255, 0, 0)
+SectionTitle.Font = "GothamBold"
+SectionTitle.BackgroundTransparency = 1
+
+-- --- HÀM TẠO Ô TÍCH (CHECKBOX) CHUẨN ---
+local function CreateCheckbox(parent, text, default, callback)
+    local Frame = Instance.new("Frame", parent)
+    Frame.Size = UDim2.new(0.9, 0, 0, 35)
+    Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Instance.new("UICorner", Frame)
+
+    local Lbl = Instance.new("TextLabel", Frame)
+    Lbl.Text = "  " .. text Lbl.Size = UDim2.new(0.7, 0, 1, 0)
+    Lbl.TextColor3 = Color3.fromRGB(255, 255, 255) LLbl.BackgroundTransparency = 1 LLbl.TextXAlignment = "Left"
+
+    local Box = Instance.new("TextButton", Frame)
+    Box.Size = UDim2.new(0, 22, 0, 22) Box.Position = UDim2.new(1, -32, 0.5, -11)
+    Box.BackgroundColor3 = default and Color3.fromRGB(255, 0, 0) or Color3.fromRGB(50, 50, 50)
+    Box.Text = default and "✓" or "" Box.TextColor3 = Color3.fromRGB(255, 255, 255) Instance.new("UICorner", Box)
+
+    local state = default
+    Box.MouseButton1Click:Connect(function() 
+        state = not state Box.Text = state and "✓" or "" 
+        Box.BackgroundColor3 = state and Color3.fromRGB(255, 0, 0) or Color3.fromRGB(50, 50, 50) 
+        callback(state) 
+    end)
+end
+
+-- --- THIẾT LẬP CÁC TAB THEO SƠ ĐỒ CỦA ÔNG ---
+local function MakeTab(name, items)
+    local TBtn = Instance.new("TextButton", TabFrame)
+    TBtn.Text = name TBtn.Size = UDim2.new(1, 0, 0, 35)
+    TBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25) TBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Instance.new("UICorner", TBtn)
+    TBtn.MouseButton1Click:Connect(function()
+        for _, v in pairs(Container:GetChildren()) do if not v:IsA("UIListLayout") then v:Destroy() end end
+        SectionTitle.Text = "YUTA HUB - " .. name:upper()
+        for _, text in pairs(items) do
+            CreateCheckbox(Container, text, false, function(s)
+                if text == "Auto Farm Level" then _G.AutoFarm = s end
+                print(text .. " state: " .. tostring(s))
+            end)
+        end
+    end)
+end
+
+MakeTab("Farm", {"Auto Farm Level", "Auto Farm Bone", "Auto Farm Katakuri"})
+MakeTab("Farm Item", {"God Human", "CDK", "Soul Guitar", "Saber", "Yama", "Tushita", "Shark Anchor"})
+MakeTab("ESP", {"ESP Players", "ESP Fruits", "ESP Islands", "ESP Chests"})
+MakeTab("Sea Event", {"Auto Farm Cá", "Auto Nhặt Quỷ Hồn", "Trade Quỷ Hồn", "Chọn Thuyền"})
+MakeTab("Volcano", {"Tìm Đảo Núi Lửa", "Đánh Golem", "Nhặt Xương Trứng Rồng"})
+MakeTab("Shop", {"Mua Trái Ác Quỷ", "Mua Kiếm", "Mua Thuyền", "Mua Võ"})
+MakeTab("Settings", {"Custom WalkSpeed", "Custom JumpPower", "Auto Stats Melee", "Auto Stats Sword"})
+
+print("YUTA HUB Ultimate Loaded!")
