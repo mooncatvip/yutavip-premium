@@ -1,0 +1,113 @@
+local CoreGui = game:GetService("CoreGui")
+local LPlayer = game:GetService("Players").LocalPlayer
+local VirtualUser = game:GetService("VirtualUser")
+local Remote = game:GetService("ReplicatedStorage").Remotes.CommF_
+
+if CoreGui:FindFirstChild("Yuta_Final_V3") then CoreGui.Yuta_Final_V3:Destroy() end
+local MainGui = Instance.new("ScreenGui", CoreGui)
+MainGui.Name = "Yuta_Final_V3"
+
+-- --- BIẾN HỆ THỐNG & ANTI-AFK ---
+_G.AutoFarm = false
+_G.FlySpeed = 100
+_G.SelectedRaid = "Flame"
+
+LPlayer.Idled:Connect(function()
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new(0,0))
+end)
+
+-- --- GIAO DIỆN CHUẨN (STYLE BANANA HUB - ĐỎ ĐEN) ---
+local Main = Instance.new("Frame", MainGui)
+Main.Size = UDim2.new(0, 560, 0, 380)
+Main.Position = UDim2.new(0.5, -280, 0.5, -190)
+Main.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+Instance.new("UICorner", Main)
+Instance.new("UIStroke", Main).Color = Color3.fromRGB(255, 0, 0)
+
+local TabFrame = Instance.new("ScrollingFrame", Main)
+TabFrame.Size = UDim2.new(0, 150, 1, -20)
+TabFrame.Position = UDim2.new(0, 10, 0, 10)
+TabFrame.BackgroundTransparency = 1
+TabFrame.ScrollBarThickness = 0
+Instance.new("UIListLayout", TabFrame).Padding = UDim.new(0, 5)
+
+local Content = Instance.new("ScrollingFrame", Main)
+Content.Size = UDim2.new(1, -180, 1, -50)
+Content.Position = UDim2.new(0, 170, 0, 40)
+Content.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+Content.CanvasSize = UDim2.new(0, 0, 5, 0)
+Instance.new("UIListLayout", Content).Padding = UDim.new(0, 8)
+
+-- HÀM TẠO CHECKBOX ✓
+local function AddToggle(parent, text, callback)
+    local F = Instance.new("Frame", parent)
+    F.Size = UDim2.new(0.95, 0, 0, 42)
+    F.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    Instance.new("UICorner", F)
+    local L = Instance.new("TextLabel", F)
+    L.Text = "  " .. text L.TextColor3 = Color3.fromRGB(255, 255, 255) L.BackgroundTransparency = 1 L.TextXAlignment = "Left" L.Size = UDim2.new(0.7, 0, 1, 0)
+    local B = Instance.new("TextButton", F)
+    B.Size = UDim2.new(0, 26, 0, 26) B.Position = UDim2.new(1, -40, 0.5, -13)
+    B.BackgroundColor3 = Color3.fromRGB(45, 45, 45) B.Text = "" Instance.new("UICorner", B)
+    local s = false
+    B.MouseButton1Click:Connect(function() 
+        s = not s B.Text = s and "✓" or "" 
+        B.BackgroundColor3 = s and Color3.fromRGB(255, 0, 0) or Color3.fromRGB(45, 45, 45) 
+        callback(s) 
+    end)
+end
+
+-- --- HÀM PHÂN TAB ---
+local function NewTab(name)
+    local T = Instance.new("TextButton", TabFrame)
+    T.Text = name T.Size = UDim2.new(1, 0, 0, 38)
+    T.BackgroundColor3 = Color3.fromRGB(30, 30, 30) T.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Instance.new("UICorner", T)
+    T.MouseButton1Click:Connect(function()
+        for _, v in pairs(Content:GetChildren()) do if not v:IsA("UIListLayout") then v:Destroy() end end
+        
+        if name == "Farm" then
+            AddToggle(Content, "Auto Farm Level (Xoay Vòng)", function(s) _G.AutoFarm = s end)
+            AddToggle(Content, "Auto Farm Bone", function(s) end)
+            AddToggle(Content, "Auto Farm Katakuri", function(s) end)
+
+        elseif name == "Settings Player" then
+            AddToggle(Content, "Đi Trên Nước", function(s) end)
+            AddToggle(Content, "Lướt Siêu Nhanh", function(s) end)
+            local flyInp = Instance.new("TextBox", Content)
+            flyInp.PlaceholderText = "Nhập Tốc Độ Bay (Mặc định 100)..."
+            flyInp.Size = UDim2.new(0.95, 0, 0, 40)
+            flyInp.FocusLost:Connect(function() _G.FlySpeed = tonumber(flyInp.Text) or 100 end)
+
+        elseif name == "Raid" then
+            local raidChoice = Instance.new("TextBox", Content)
+            raidChoice.PlaceholderText = "Nhập Trái Muốn Raid (Flame, Ice, Light...)"
+            raidChoice.Size = UDim2.new(0.95, 0, 0, 40)
+            raidChoice.FocusLost:Connect(function() _G.SelectedRaid = raidChoice.Text end)
+            AddToggle(Content, "Auto Buy Chip", function(s) end)
+            AddToggle(Content, "Auto Raid", function(s) end)
+            AddToggle(Content, "Auto Raid Trái > 1M", function(s) end)
+
+        elseif name == "Settings" then
+            AddToggle(Content, "Siêu Sáng / Xoá Sương Mù", function(s) end)
+            AddToggle(Content, "Fix Lag Extreme", function(s) end)
+            AddToggle(Content, "Auto Nhập Full Code", function(s) end)
+
+        elseif name == "Item Farm" then
+            local items = {"God Human", "CDK", "Soul Guitar", "Saber", "Shark Anchor"}
+            for _, i in pairs(items) do AddToggle(Content, "Lấy " .. i, function(s) end) end
+
+        elseif name == "Race V2-V4" then
+            AddToggle(Content, "Auto Race V2/V3", function(s) end)
+            AddToggle(Content, "Auto Nhặt Gear", function(s) end)
+
+        elseif name == "Shop" then
+            AddToggle(Content, "Auto Gacha Fruit", function(s) if s then Remote:InvokeServer("Cousin", "Buy") end end)
+        end
+    end)
+end
+
+local tabs = {"Farm", "Item Farm", "Race V2-V4", "Raid", "Shop", "Settings Player", "Settings"}
+for _, t in pairs(tabs) do NewTab(t) end
+print("YUTA HUB V3 : FULL OPTIONS LOADED!")
