@@ -1,0 +1,134 @@
+local CoreGui = game:GetService("CoreGui")
+local LPlayer = game:GetService("Players").LocalPlayer
+local VirtualUser = game:GetService("VirtualUser")
+local Remote = game:GetService("ReplicatedStorage").Remotes.CommF_
+
+if CoreGui:FindFirstChild("Yuta_Final_100") then CoreGui.Yuta_Final_100:Destroy() end
+local MainGui = Instance.new("ScreenGui", CoreGui)
+MainGui.Name = "Yuta_Final_100"
+
+-- --- CẤU HÌNH HỆ THỐNG ---
+_G.AutoFarm = false
+_G.WalkSpeed = 16
+_G.JumpPower = 50
+_G.Distance = 12
+
+-- --- [1. CORE LOGIC: FARM & OMNI-HITBOX] ---
+spawn(function()
+    while task.wait() do
+        if _G.AutoFarm then
+            pcall(function()
+                -- Tự động chọn quái chuẩn cho Level 2800 của YUTA
+                local myLv = LPlayer.Data.Level.Value
+                local target = nil
+                local tName = (myLv >= 2700 and "Living Zombie") or (myLv >= 2500 and "Warrior") or "Monster"
+                
+                for _, v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                    if v.Name:find(tName) and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
+                        target = v break
+                    end
+                end
+
+                if target then
+                    -- Teleport tức thời (Không bay) + Omni-Hitbox 360 độ
+                    LPlayer.Character.HumanoidRootPart.CFrame = target.HumanoidRootPart.CFrame * CFrame.new(0, _G.Distance, 0)
+                    for _, p in pairs(target:GetChildren()) do
+                        if p:IsA("BasePart") then p.CanCollide = false p.Size = Vector3.new(55, 55, 55) end
+                    end
+                    VirtualUser:CaptureController()
+                    VirtualUser:ClickButton1(Vector2.new(851, 158))
+                end
+            end)
+        end
+        -- Cập nhật Speed/Jump từ Settings
+        pcall(function()
+            LPlayer.Character.Humanoid.WalkSpeed = _G.WalkSpeed
+            LPlayer.Character.Humanoid.JumpPower = _G.JumpPower
+        end)
+    end
+end)
+
+-- --- [2. GIAO DIỆN CHUẨN YZ YUTA (CHECKBOX STYLE)] ---
+local Toggle = Instance.new("ImageButton", MainGui)
+Toggle.Size = UDim2.new(0, 60, 0, 60)
+Toggle.Position = UDim2.new(0, 15, 0.5, -30)
+Toggle.Image = "rbxassetid://15115502120"
+Toggle.Draggable = true
+Instance.new("UICorner", Toggle).CornerRadius = UDim.new(1, 0)
+Instance.new("UIStroke", Toggle).Color = Color3.fromRGB(255, 0, 0)
+
+local Main = Instance.new("Frame", MainGui)
+Main.Size = UDim2.new(0, 620, 0, 380)
+Main.Position = UDim2.new(0.5, -310, 0.5, -190)
+Main.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+Main.Visible = false
+Instance.new("UICorner", Main)
+Instance.new("UIStroke", Main).Color = Color3.fromRGB(255, 0, 0)
+
+Toggle.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
+
+local TabFrame = Instance.new("ScrollingFrame", Main)
+TabFrame.Size = UDim2.new(0, 150, 1, -20)
+TabFrame.Position = UDim2.new(0, 10, 0, 10)
+TabFrame.BackgroundTransparency = 1
+TabFrame.ScrollBarThickness = 0
+Instance.new("UIListLayout", TabFrame).Padding = UDim.new(0, 6)
+
+local Content = Instance.new("ScrollingFrame", Main)
+Content.Size = UDim2.new(1, -180, 1, -50)
+Content.Position = UDim2.new(0, 170, 0, 40)
+Content.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+Content.CanvasSize = UDim2.new(0, 0, 4, 0)
+Instance.new("UIListLayout", Content).Padding = UDim.new(0, 8)
+
+-- --- [3. HÀM TẠO NỘI DUNG TỪNG TAB] ---
+local function CreateToggle(txt, callback)
+    local F = Instance.new("Frame", Content)
+    F.Size = UDim2.new(0.95, 0, 0, 45)
+    F.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    Instance.new("UICorner", F)
+    local L = Instance.new("TextLabel", F)
+    L.Text = "  " .. txt L.Size = UDim2.new(0.7, 0, 1, 0)
+    L.TextColor3 = Color3.fromRGB(255, 255, 255) L.BackgroundTransparency = 1 L.TextXAlignment = "Left"
+    local B = Instance.new("TextButton", F)
+    B.Size = UDim2.new(0, 28, 0, 28) B.Position = UDim2.new(1, -40, 0.5, -14)
+    B.BackgroundColor3 = Color3.fromRGB(50, 50, 50) B.Text = "" Instance.new("UICorner", B)
+    local s = false
+    B.MouseButton1Click:Connect(function() 
+        s = not s B.Text = s and "✓" or "" 
+        B.BackgroundColor3 = s and Color3.fromRGB(255, 0, 0) or Color3.fromRGB(50, 50, 50) 
+        callback(s) 
+    end)
+end
+
+local function MakeTab(name)
+    local T = Instance.new("TextButton", TabFrame)
+    T.Text = name T.Size = UDim2.new(1, 0, 0, 38)
+    T.BackgroundColor3 = Color3.fromRGB(30, 30, 30) T.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Instance.new("UICorner", T)
+    T.MouseButton1Click:Connect(function()
+        for _, v in pairs(Content:GetChildren()) do if not v:IsA("UIListLayout") then v:Destroy() end end
+        if name == "Farm" then
+            CreateToggle("Auto Farm Level", function(s) _G.AutoFarm = s end)
+            CreateToggle("Auto Farm Bone", function(s) _G.AutoBone = s end)
+        elseif name == "Shop" then
+            local shopItems = {"Saber", "Bispento", "Random Fruit", "Black Leg"}
+            for _, i in pairs(shopItems) do
+                local Btn = Instance.new("TextButton", Content)
+                Btn.Text = "Mua " .. i Btn.Size = UDim2.new(0.95, 0, 0, 40)
+                Btn.MouseButton1Click:Connect(function() Remote:InvokeServer("BuyItem", i) end)
+            end
+        elseif name == "Settings" then
+            local speed = Instance.new("TextBox", Content)
+            speed.PlaceholderText = "Nhập Speed..." speed.Size = UDim2.new(0.95, 0, 0, 40)
+            speed.FocusLost:Connect(function() _G.WalkSpeed = tonumber(speed.Text) or 16 end)
+            CreateToggle("Tele Admin", function(s) if s then LPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 5000, 0) end end)
+        end
+    end)
+end
+
+-- KHỞI TẠO TẤT CẢ TAB THEO YÊU CẦU
+local tabs = {"Farm", "Farm Item", "Sea Event", "Dragon Dojo", "Volcano", "Shop", "ESP", "Settings"}
+for _, t in pairs(tabs) do MakeTab(t) end
+
+print("YUTA HUB V3 : 100% COMPLETED!")
