@@ -1,0 +1,70 @@
+-- [[ YUTA HUB : NO KEY VERSION ]]
+local CoreGui = game:GetService("CoreGui")
+local LPlayer = game:GetService("Players").LocalPlayer
+
+if CoreGui:FindFirstChild("Yuta_NoKey_Project") then CoreGui.Yuta_NoKey_Project:Destroy() end
+
+local MainGui = Instance.new("ScreenGui", CoreGui)
+MainGui.Name = "Yuta_NoKey_Project"
+
+-- --- 1. KHUNG CHÍNH (GIỮ STYLE ĐỎ-TRẮNG CỦA ÔNG) ---
+local MainFrame = Instance.new("Frame", MainGui)
+MainFrame.Size = UDim2.new(0, 380, 0, 200) 
+MainFrame.Position = UDim2.new(0.5, -190, 0.4, -100) -- Đẩy cao lên cho đỡ vướng
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Instance.new("UICorner", MainFrame)
+local Stroke = Instance.new("UIStroke", MainFrame)
+Stroke.Color = Color3.fromRGB(255, 0, 0)
+Stroke.Thickness = 2
+
+-- --- 2. TIÊU ĐỀ ---
+local Title = Instance.new("TextLabel", MainFrame)
+Title.Size = UDim2.new(1, 0, 0, 50)
+Title.BackgroundTransparency = 1
+Title.RichText = true
+Title.Text = '<font color="#FF0000">YUTA</font> <font color="#FFFFFF">HUB : FREE VERSION</font>'
+Title.Font = "GothamBold"
+Title.TextSize = 20
+
+-- --- 3. THÔNG TIN USER (LOGO NINJA) ---
+local UserInfo = Instance.new("TextLabel", MainFrame)
+UserInfo.Size = UDim2.new(1, 0, 0, 30)
+UserInfo.Position = UDim2.new(0, 0, 0.3, 0)
+UserInfo.BackgroundTransparency = 1
+UserInfo.Text = "👤 Welcome: " .. LPlayer.Name
+UserInfo.TextColor3 = Color3.fromRGB(200, 200, 200)
+UserInfo.Font = "GothamMedium"
+UserInfo.TextSize = 15
+
+-- --- 4. NÚT KÍCH HOẠT DUY NHẤT ---
+local StartBtn = Instance.new("TextButton", MainFrame)
+StartBtn.Name = "ActivateButton"
+StartBtn.Text = "ACTIVATE SCRIPT"
+StartBtn.Size = UDim2.new(0.8, 0, 0, 50)
+StartBtn.Position = UDim2.new(0.1, 0, 0.6, 0)
+StartBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+StartBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+StartBtn.Font = "GothamBold"
+StartBtn.TextSize = 18
+Instance.new("UICorner", StartBtn)
+
+-- Hiệu ứng nhấp nháy cho nút (Cho nó chuyên nghiệp)
+spawn(function()
+    while task.wait(0.8) do
+        if StartBtn.Parent then
+            StartBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+            task.wait(0.8)
+            StartBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+        end
+    end
+end)
+
+-- --- LOGIC MỞ SCRIPT ---
+StartBtn.MouseButton1Click:Connect(function()
+    StartBtn.Text = "LOADING..."
+    task.wait(1)
+    MainGui:Destroy()
+    
+    -- [[ DÁN CODE MENU CHÍNH CỦA ÔNG VÀO ĐÂY ]]
+    print("YUTA HUB Activated!")
+end)
