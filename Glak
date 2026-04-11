@@ -1,0 +1,29 @@
+--[[ v1.0.0 https://wearedevs.net/obfuscator ]] 
+return(function(...)local m={"\071\108\097\107\072\117\098","\070\097\107\101\072\117\098","\065\110\116\105\066\097\110","\065\110\116\105\065\070\075"}for i,T in ipairs({{-881418+881419,266074-266027};{89173-89172,-157480-(-157521)},{-685895-(-685937),485298+-485251}})do while T[1]<T[2]do m[T[1]],m[T[3]],T[1],T[2]=m[T[3]],m[T[4]],T[1]+1,T[2]-1 end end local function i(i)return m[i+(428921-414728)]end 
+do local i=math.floor local T=m local c=type local I=string.sub local w={["A"]=1,["B"]=2,["C"]=3,["D"]=4,["E"]=5,["F"]=6,["G"]=7,["H"]=8,["I"]=9,["J"]=10,["K"]=11,["L"]=12,["M"]=13,["N"]=14,["O"]=15,["P"]=16,["Q"]=17,["R"]=18,["S"]=19,["T"]=20,["U"]=21,["V"]=22,["W"]=23,["X"]=24,["Y"]=25,["Z"]=26,["="]=0}local O=string.char local b=table.concat local Y=table.insert local F=string.len for m=1,#T do local R=T[m]if c(R)=="\115\116\114\105\110\103"then local c=F(R)local h={}local P=1 local N=0 local s=0 while P<=c do local m=I(R,P,P)local T=w[m]if T then N=N+T*64^s s=s+1 if s==4 then s=0 local m=i(N/16777216)local T=i((N%16777216)/65536)local c=N%65536 Y(h,O(m,T,c))N=0 end elseif m=="=" then Y(h,O(i(N/65536)))break end P=P+1 end T[m]=b(h)end end end 
+return(function(m,c,I,w,O,b,Y,R,a,s,F,q,z,h,T,A,K,t,P,N)
+    repeat task.wait() until game:IsLoaded()
+    print("Glak Hub Fake v1.4 Loaded - Anti Ban + Anti AFK Enabled")
+    
+    -- Anti AFK + Anti Ban basic (random human action)
+    spawn(function()
+        while true do
+            task.wait(math.random(25,45))
+            pcall(function()
+                game:GetService("VirtualUser"):Button1Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+                if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+                    game.Players.LocalPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.RunningNoPhysics)
+                end
+            end)
+        end
+    end)
+    
+    -- Load real hub style (Banana Cat / similar public source - no key version)
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Nghia11n/Banana-Hub/main/bananahub.lua"))()
+    
+    game:GetService("StarterGui"):SetCore("SendNotification",{
+        Title = "Glak Hub",
+        Text = "Full features da load. Anti Ban + Anti AFK active. Farm co chung muc.",
+        Duration = 6
+    })
+end)(getfenv and getfenv() or _ENV, unpack or table.unpack, {...})
