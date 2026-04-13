@@ -1,0 +1,62 @@
+-- [[ YUTA CHEST SKIP - NO WAIT - MINI MENU ]]
+local CoreGui = game:GetService("CoreGui")
+local LPlayer = game:GetService("Players").LocalPlayer
+
+-- --- BIẾN TRẠNG THÁI ---
+_G.SkipChest = false
+
+-- --- LOGIC SKIP THỜI GIAN MỞ RƯƠNG ---
+-- Script này can thiệp vào vận tốc xử lý rương để mở ngay lập tức khi chạm
+spawn(function()
+    while task.wait(0.1) do -- Chạy nhẹ nhàng chống lag cho Poco C71
+        if _G.SkipChest then
+            pcall(function()
+                for _, v in pairs(game:GetService("Workspace"):GetChildren()) do
+                    if v.Name:find("Chest") and v:IsA("BasePart") then
+                        -- Loại bỏ hiệu ứng chờ/giữ nút để mở rương
+                        firetouchinterest(LPlayer.Character.HumanoidRootPart, v, 0)
+                        firetouchinterest(LPlayer.Character.HumanoidRootPart, v, 1)
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+-- --- MENU MINI (SIÊU NHỎ GỌN) ---
+if CoreGui:FindFirstChild("Yuta_Mini_Skip") then CoreGui.Yuta_Mini_Skip:Destroy() end
+local MiniGui = Instance.new("ScreenGui", CoreGui)
+MiniGui.Name = "Yuta_Mini_Skip"
+
+local Frame = Instance.new("Frame", MiniGui)
+Frame.Size = UDim2.new(0, 100, 0, 40)
+Frame.Position = UDim2.new(0.5, -50, 0, 10)
+Frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Frame.Active = true
+Frame.Draggable = true -- Cho phép YUTA kéo menu đi bất cứ đâu
+Instance.new("UICorner", Frame)
+local Stroke = Instance.new("UIStroke", Frame)
+Stroke.Color = Color3.fromRGB(255, 0, 0)
+
+local Btn = Instance.new("TextButton", Frame)
+Btn.Size = UDim2.new(1, -10, 1, -10)
+Btn.Position = UDim2.new(0, 5, 0, 5)
+Btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Btn.Text = "SKIP: OFF"
+Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+Btn.Font = "GothamBold"
+Btn.TextSize = 12
+Instance.new("UICorner", Btn)
+
+Btn.MouseButton1Click:Connect(function()
+    _G.SkipChest = not _G.SkipChest
+    if _G.SkipChest then
+        Btn.Text = "SKIP: ON"
+        Btn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    else
+        Btn.Text = "SKIP: OFF"
+        Btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    end
+end)
+
+print("YUTA CHEST SKIP LOADED!")
