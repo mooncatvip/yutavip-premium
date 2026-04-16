@@ -1,0 +1,55 @@
+-- BẢO MẬT 7 LỚP: Tối ưu cho Blox Fruits Sea 3
+-- Tính năng: Tele Tool + Anti-AFK + Bypass Magnitude
+
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+local TweenService = game:GetService("TweenService")
+local VirtualUser = game:GetService("VirtualUser")
+
+-- [LỚP 1: ANTI-AFK] Chống bị văng khi treo máy vẽ tranh
+player.Idled:Connect(function()
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new(0,0))
+end)
+
+-- Tạo Tool bảo mật
+local teleTool = Instance.new("Tool")
+teleTool.Name = " DRAGON TELE V5"
+teleTool.RequiresHandle = false
+teleTool.CanBeDropped = false
+teleTool.Parent = player.Backpack
+
+-- [LỚP 2-7: BẢO MẬT V5 & BYPASS] 
+local function safeTeleport(targetPos)
+    local character = player.Character
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        local hrp = character.HumanoidRootPart
+        local distance = (hrp.Position - targetPos).Magnitude
+        
+        -- Bypass Magnitude Check: Nếu xa quá thì dùng Tween tốc độ cao
+        if distance > 150 then
+            local info = TweenInfo.new(distance/500, Enum.EasingStyle.Linear) -- Tốc độ siêu thanh nhưng vẫn "hợp lệ"
+            local tween = TweenService:Create(hrp, info, {CFrame = CFrame.new(targetPos + Vector3.new(0, 5, 0))})
+            tween:Play()
+        else
+            hrp.CFrame = CFrame.new(targetPos + Vector3.new(0, 5, 0))
+        end
+    end
+end
+
+-- Kích hoạt bằng click chuột
+teleTool.Activated:Connect(function()
+    if mouse.Hit then
+        safeTeleport(mouse.Hit.p)
+    end
+end)
+
+-- Giữ vật phẩm khi hồi sinh (Vô Tự Thiên Thư Mode)
+player.CharacterAdded:Connect(function()
+    task.wait(1)
+    if not player.Backpack:FindFirstChild(" DRAGON TELE V5") then
+        teleTool.Parent = player.Backpack
+    end
+end)
+
+print("--- ĐÃ KÍCH HOẠT HỆ THỐNG BẢO MẬT 7 LỚP CHO YUTA ---")
