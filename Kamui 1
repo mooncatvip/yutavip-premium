@@ -1,0 +1,83 @@
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+
+-- Tạo Tool Kamui Quyền Năng
+local teleTool = Instance.new("Tool")
+teleTool.Name = "Admin (Kamui 1)"
+teleTool.RequiresHandle = false
+teleTool.CanBeDropped = false
+teleTool.Parent = player.Backpack
+
+-- [LỚP 1-3: VFX] Hiệu ứng hắc cầu Kamui tròn 5s
+local function createKamuiSphere(part)
+    local attachment = Instance.new("Attachment", part)
+    local sphere = Instance.new("ParticleEmitter")
+    
+    sphere.Color = ColorSequence.new(Color3.new(0, 0, 0)) -- Đen kịt chuẩn YUTA
+    sphere.Size = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 0),
+        NumberSequenceKeypoint.new(0.2, 8), -- Nở thành cầu lớn bao phủ
+        NumberSequenceKeypoint.new(1, 0)
+    })
+    sphere.Texture = "rbxassetid://243665224"
+    sphere.Lifetime = NumberRange.new(5) -- Tồn tại đúng 5 giây
+    sphere.Rate = 300
+    sphere.Speed = NumberRange.new(0) -- Giữ khói đứng yên tạo hình cầu
+    sphere.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 0),
+        NumberSequenceKeypoint.new(0.8, 0),
+        NumberSequenceKeypoint.new(1, 1)
+    })
+    sphere.Shape = Enum.ParticleEmitterShape.Sphere -- Hoạt ảnh tròn
+    sphere.Parent = attachment
+    
+    return attachment
+end
+
+-- [LỚP 4-6: TELEPORT] Dịch chuyển đến tọa độ Kamui 1
+local function kamuiOneTeleport()
+    local character = player.Character
+    local hrp = character and character:FindFirstChild("HumanoidRootPart")
+    
+    if hrp then
+        -- 1. Triệu hồi Hắc Cầu tại chỗ
+        local eff1 = createKamuiSphere(hrp)
+        task.wait(0.3) -- Hiệu ứng bắt đầu bao phủ
+
+        -- 2. Dịch chuyển (Bypass 7 lớp - Chống văng)
+        local bv = Instance.new("BodyVelocity")
+        bv.Velocity = Vector3.new(0, 0, 0)
+        bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+        bv.Parent = hrp
+        
+        -- Tọa độ "Kamui 1" (Ông có thể sửa số này theo tọa độ đảo Admin ông muốn)
+        hrp.CFrame = CFrame.new(0, 1000, 0) 
+
+        -- 3. Xuất hiện tại Kamui 1 với Hắc Cầu mới
+        local eff2 = createKamuiSphere(hrp)
+        
+        task.wait(0.1)
+        bv:Destroy()
+        hrp.Velocity = Vector3.new(0, 0, 0)
+
+        -- 4. Tự động dọn dẹp sau 5 giây để giữ độ "nghệ"
+        task.delay(5, function()
+            eff1:Destroy()
+            eff2:Destroy()
+        end)
+    end
+end
+
+teleTool.Activated:Connect(kamuiOneTeleport)
+
+-- [LỚP 7: ANTI-AFK] Bảo mật cho YUTA
+player.Idled:Connect(function()
+    game:GetService("VirtualUser"):CaptureController()
+    game:GetService("VirtualUser"):ClickButton2(Vector2.new(0,0))
+end)
+
+-- Tự động lấy lại tool
+player.CharacterAdded:Connect(function()
+    task.wait(1)
+    teleTool.Parent = player.Backpack
+end)
