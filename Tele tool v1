@@ -1,0 +1,81 @@
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+
+-- Tạo Tool
+local teleTool = Instance.new("Tool")
+teleTool.Name = "🌀 BLACK HOLE TELE"
+teleTool.RequiresHandle = false
+teleTool.CanBeDropped = false
+teleTool.Parent = player.Backpack
+
+-- Hàm tạo quả cầu khói đen 5s
+local function createDarkSphere(part)
+    local attachment = Instance.new("Attachment", part)
+    local sphere = Instance.new("ParticleEmitter")
+    
+    sphere.Color = ColorSequence.new(Color3.new(0, 0, 0)) -- Đen kịt
+    sphere.Size = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 0),
+        NumberSequenceKeypoint.new(0.2, 6), -- Nở ra thành hình cầu to
+        NumberSequenceKeypoint.new(1, 0)
+    })
+    sphere.Texture = "rbxassetid://243665224"
+    sphere.Lifetime = NumberRange.new(5) -- Hiệu ứng tồn tại 5 giây
+    sphere.Rate = 200
+    sphere.Speed = NumberRange.new(0) -- Giữ khói đứng im quanh người
+    sphere.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 0),
+        NumberSequenceKeypoint.new(0.8, 0),
+        NumberSequenceKeypoint.new(1, 1)
+    })
+    -- Biến nó thành hình tròn
+    sphere.Shape = Enum.ParticleEmitterShape.Sphere
+    sphere.ShapeStyle = Enum.ParticleEmitterShapeStyle.Surface
+    
+    sphere.Parent = attachment
+    return attachment
+end
+
+local function darkSphereTeleport(targetPos)
+    local character = player.Character
+    local hrp = character and character:FindFirstChild("HumanoidRootPart")
+    
+    if hrp then
+        -- 1. Tạo cầu đen tại vị trí cũ
+        local startEffect = createDarkSphere(hrp)
+        
+        -- 2. Dịch chuyển ngay lập tức (vẫn dùng BodyVelocity chống văng)
+        local bv = Instance.new("BodyVelocity")
+        bv.Velocity = Vector3.new(0, 0, 0)
+        bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+        bv.Parent = hrp
+        hrp.CFrame = CFrame.new(targetPos + Vector3.new(0, 5, 0))
+        
+        -- 3. Tạo cầu đen tại vị trí mới để đánh lạc hướng
+        local endEffect = createDarkSphere(hrp)
+        
+        task.wait(0.1)
+        bv:Destroy()
+        hrp.Velocity = Vector3.new(0, 0, 0)
+        
+        -- 4. Dọn dẹp sau 5 giây (để quả cầu tan biến từ từ)
+        task.delay(5, function()
+            startEffect:Destroy()
+            endEffect:Destroy()
+        end)
+    end
+end
+
+teleTool.Activated:Connect(function()
+    if mouse.Hit then
+        darkSphereTeleport(mouse.Hit.p)
+    end
+end)
+
+-- Anti-AFK (Bảo mật cho YUTA)
+player.Idled:Connect(function()
+    game:GetService("VirtualUser"):CaptureController()
+    game:GetService("VirtualUser"):ClickButton2(Vector2.new(0,0))
+end)
+
+print("--- PHÁP SƯ HẮC CẦU ĐÃ XUẤT THẾ ---")
