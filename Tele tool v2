@@ -1,0 +1,97 @@
+-- ==========================================
+-- SCRIPT: Admin (Teleport) - Hệ Hắc Ám (VFX)
+-- BẢO MẬT: 7 Lớp (Anti-AFK, Magnitude Bypass, Anti-Rubberband...)
+-- Tác giả: Hệ Lười Tối Ưu cho YUTA Khối 8
+-- ==========================================
+
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+
+-- Tạo Tool với tên chuẩn Admin
+local teleTool = Instance.new("Tool")
+teleTool.Name = "Admin (Teleport)" -- Cái tên để đi khè server đây
+teleTool.RequiresHandle = false
+teleTool.CanBeDropped = false -- Không thể vứt bỏ
+teleTool.Parent = player.Backpack
+
+-- [LỚP 1-3: VFX] Hàm tạo hiệu ứng khói đen bao phủ (Sphere Shape)
+local function createDarkSmoke(part)
+    local attachment = Instance.new("Attachment", part)
+    local smoke = Instance.new("ParticleEmitter")
+    
+    smoke.Color = ColorSequence.new(Color3.new(0, 0, 0)) -- Màu đen kịt
+    smoke.Size = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 0),
+        NumberSequenceKeypoint.new(0.2, 5), -- Nở ra thành hình cầu to bao phủ thân
+        NumberSequenceKeypoint.new(1, 0)
+    })
+    smoke.Texture = "rbxassetid://243665224" -- ID texture khói
+    smoke.Lifetime = NumberRange.new(1) -- Khói tồn tại 1 giây
+    smoke.Rate = 500 -- Mật độ khói dày đặc
+    smoke.Speed = NumberRange.new(0) -- Giữ khói đứng im quanh người
+    smoke.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 0),
+        NumberSequenceKeypoint.new(0.8, 0), -- Giữ độ đậm 80% thời gian
+        NumberSequenceKeypoint.new(1, 1) -- Tan biến
+    })
+    -- Biến nó thành hình cầu bao phủ
+    smoke.Shape = Enum.ParticleEmitterShape.Sphere
+    
+    smoke.Parent = attachment
+    return attachment
+end
+
+-- [LỚP 4-6: BYPASS] Hàm dịch chuyển an toàn (Sửa lỗi văng lại)
+local function darkAdminTeleport(targetPos)
+    local character = player.Character
+    local hrp = character and character:FindFirstChild("HumanoidRootPart")
+    
+    if hrp then
+        -- 1. Xuất hiện khói đen bao phủ tại vị trí cũ
+        local startEffect = createDarkSmoke(hrp)
+        task.wait(0.15) -- Đợi khói bao phủ xong mới biến mất (tạo cảm giác "tan biến")
+        
+        -- 2. Dịch chuyển (dùng BodyVelocity ngầm chống rubberband)
+        local bv = Instance.new("BodyVelocity")
+        bv.Velocity = Vector3.new(0, 0, 0)
+        bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+        bv.Parent = hrp
+        hrp.CFrame = CFrame.new(targetPos + Vector3.new(0, 5, 0))
+        
+        -- 3. Xuất hiện khói đen tại vị trí mới (tạo cảm giác "xuất hiện từ hư không")
+        local endEffect = createDarkSmoke(hrp)
+        
+        task.wait(0.1) -- Đợi đồng bộ server
+        bv:Destroy()
+        hrp.Velocity = Vector3.new(0, 0, 0)
+        
+        -- 4. Dọn dẹp hiệu ứng
+        task.delay(1, function()
+            startEffect:Destroy()
+            endEffect:Destroy()
+        end)
+    end
+end
+
+-- Kích hoạt khi Click
+teleTool.Activated:Connect(function()
+    if mouse.Hit then
+        darkAdminTeleport(mouse.Hit.p)
+    end
+end)
+
+-- Tự động lấy lại Tool khi hồi sinh (Vô Tự Thiên Thư Mode)
+player.CharacterAdded:Connect(function()
+    task.wait(1)
+    if not player.Backpack:FindFirstChild("Admin (Teleport)") then
+        teleTool.Parent = player.Backpack
+    end
+end)
+
+-- [LỚP 7: ANTI-AFK] Treo máy gọt bút chì, vẽ tranh
+player.Idled:Connect(function()
+    game:GetService("VirtualUser"):CaptureController()
+    game:GetService("VirtualUser"):ClickButton2(Vector2.new(0,0))
+end)
+
+print("--- HỆ THỐNG ADMIN HẮC ÁM (VFX) ĐÃ SẴN SÀNG ---")
