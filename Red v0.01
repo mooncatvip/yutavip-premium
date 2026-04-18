@@ -1,0 +1,11 @@
+local AutoFarmBtn = Instance.new("TextButton")
+AutoFarmBtn.Parent = Container
+AutoFarmBtn.Size = UDim2.new(1, 0, 0, 30)
+AutoFarmBtn.Text = "Bật Auto Farm (Sắp ra mắt)"
+AutoFarmBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+
+-- Hiệu ứng khi bấm vào
+AutoFarmBtn.MouseButton1Click:Connect(function()
+    print("Yuta đã kích hoạt Auto Farm!")
+    -- Chỗ này sau này mình sẽ nhồi code Auto Farm vào đây
+end)
