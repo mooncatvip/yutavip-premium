@@ -1,0 +1,56 @@
+-- [[ YUTA HUB: PHÁP SƯ SINH TỒN ]] --
+local player = game.Players.LocalPlayer
+local starterGui = game:GetService("StarterGui")
+
+player.Chatted:Connect(function(msg)
+    if msg == "/ Infinity" then
+        
+        -- 1. HỆ THỐNG THÔNG BÁO XÁC NHẬN
+        starterGui:SetCore("SendNotification", {
+            Title = "Yuta Hub";
+            Text = "Đã kích hoạt thành công!"; -- Thông báo đúng ý ông nhé
+            Icon = "rbxassetid://6033785611"; -- Thêm cái icon cho chuyên nghiệp
+            Duration = 5;
+        })
+
+        -- 2. VÒNG LẶP SIÊU TỐC (HỒI MÁU & SPEED & THỜI GIAN)
+        game:GetService("RunService").RenderStepped:Connect(function()
+            local char = player.Character
+            if char then
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then
+                    -- Hồi máu tốc độ ánh sáng (Vả chết mọi loại Boss)
+                    if hum.Health < hum.MaxHealth then
+                        hum.Health = hum.MaxHealth
+                    end
+                    -- Tốc độ nhanh hơn 1.5 lần (Mặc định 16 -> 24)
+                    hum.WalkSpeed = 18
+                end
+            end
+            
+            -- Luôn luôn là ban ngày & Xóa mù vĩnh viễn
+            game.Lighting.ClockTime = 12
+            game.Lighting.FogEnd = 999999
+            game.Lighting.GlobalShadows = false
+        end)
+
+        -- 3. CHỐNG ĐÓI TUYỆT ĐỐI (KHÔNG CẦN ĂN)
+        task.spawn(function()
+            while true do
+                -- Tự động tìm và khóa thanh Hunger/Food/Energy
+                local data = player:FindFirstChild("leaderstats") or player:FindFirstChild("Data") or player:FindFirstChild("Stats")
+                if data then
+                    for _, stat in pairs(data:GetChildren()) do
+                        local name = stat.Name:lower()
+                        if name:find("hunger") or name:find("food") or name:find("energy") then
+                            stat.Value = 100
+                        end
+                    end
+                end
+                task.wait(1) -- Kiểm tra mỗi giây để máy Poco chạy mượt, không lag
+            end
+        end)
+
+        print("Yuta Hub Premium: Kich hoat ma 427/189 thanh cong!")
+    end
+end)
