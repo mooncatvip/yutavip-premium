@@ -1,0 +1,137 @@
+-- [[ YUTA AI HUB: VIP GIAO DIỆN FLUX ]] --
+-- [[ SỬA LẠI THEO YÊU CẦU CỦA YUTA - BAO ĐẸP ]] --
+
+-- 1. LOAD THƯ VIỆN UI VIP (Bo góc, Gradient, Blur)
+local Flux = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/main/main.lua"))()
+local Window = Flux:CreateWindow({
+    Title = "Yuta AI: Bình Nguyên Vô Tận",
+    SubTitle = "bởi Gemini AI & Yuta",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 360), -- Kích thước chuẩn Mobile
+    Color = Color3.fromRGB(0, 255, 127), -- Màu Neon chủ đạo
+    Acrylic = true, -- Hiệu ứng Blur nền
+    Theme = "Dark"
+})
+
+-- [[ TAB CHÍNH: QUYỀN NĂNG AI ]] --
+local Tab1 = Window:AddTab({ Name = "Quyền Năng AI", Icon = "rbxassetid://4483345998" })
+
+Tab1:AddParagraph({Title = "Trạng thái", Content = "Đang làm bố :))"})
+
+-- Infinity Mode
+_G.Inf = false
+Tab1:AddToggle("InfMode", {
+    Title = "Infinity Mode",
+    Default = false,
+    Callback = function(Value)
+        _G.Inf = Value
+        while _G.Inf do
+            pcall(function()
+                local char = game.Players.LocalPlayer.Character
+                if char and char:FindFirstChild("Humanoid") then
+                    char.Humanoid.Health = char.Humanoid.MaxHealth
+                    char.Humanoid.WalkSpeed = 24
+                end
+                game.Lighting.ClockTime = 12
+                game.Lighting.FogEnd = 999999
+                -- Khóa đói
+                local s = game.Players.LocalPlayer:FindFirstChild("leaderstats") or game.Players.LocalPlayer:FindFirstChild("Data")
+                if s then
+                    for _, v in pairs(s:GetChildren()) do
+                        if v.Name:lower():find("hun") or v.Name:lower():find("foo") then v.Value = 100 end
+                    end
+                end
+            end)
+            task.wait(0.3)
+        end
+    end
+})
+
+-- Rain Mode
+_G.Rain = false
+Tab1:AddToggle("RainMode", {
+    Title = "Rain Items (Mưa đồ)",
+    Default = false,
+    Callback = function(Value)
+        _G.Rain = Value
+        while _G.Rain do
+            pcall(function()
+                for _, item in pairs(workspace:GetDescendants()) do
+                    if item:IsA("TouchTransmitter") then
+                        local root = item.Parent:FindFirstChild("Handle") or item.Parent:FindFirstChildWhichIsA("BasePart") or item.Parent.PrimaryPart
+                        if root then
+                            root.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(math.random(-20, 20), 35, math.random(-20, 20))
+                        end
+                    end
+                end
+            end)
+            task.wait(0.3)
+        end
+    end
+})
+
+-- [[ TAB 2: LỆNH ADMIN (GOM ĐỒ & TP) ]] --
+local TabAdmin = Window:AddTab({ Name = "Admin Panel", Icon = "rbxassetid://4483345998" })
+
+TabAdmin:AddSection({Name = "Gom đồ (Bring Items)"})
+
+TabAdmin:AddButton({Name = "Bring All Food", Callback = function()
+    for _, v in pairs(workspace:GetDescendants()) do
+        if v:IsA("TouchTransmitter") and v.Parent.Name:lower():find("food") then
+            v.Parent:PivotTo(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
+        end
+    end
+end})
+
+TabAdmin:AddButton({Name = "Bring All Wood", Callback = function()
+    for _, v in pairs(workspace:GetDescendants()) do
+        if v:IsA("TouchTransmitter") and v.Parent.Name:lower():find("wood") then
+            v.Parent:PivotTo(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
+        end
+    end
+end})
+
+TabAdmin:AddButton({Name = "Bring All Items", Callback = function()
+    for _, v in pairs(workspace:GetDescendants()) do
+        if v:IsA("TouchTransmitter") then
+            v.Parent:PivotTo(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
+        end
+    end
+end})
+
+TabAdmin:AddSection({Name = "Thời gian & Di chuyển"})
+
+TabAdmin:AddButton({Name = "Set Day", Callback = function() game.Lighting.ClockTime = 12 end})
+TabAdmin:AddButton({Name = "Set Night", Callback = function() game.Lighting.ClockTime = 0 end})
+
+TabAdmin:AddButton({Name = "TP Random Player", Callback = function()
+    local players = game.Players:GetPlayers()
+    local randomPlayer = players[math.random(1, #players)]
+    if randomPlayer ~= game.Players.LocalPlayer and randomPlayer.Character then
+        game.Players.LocalPlayer.Character:PivotTo(randomPlayer.Character.HumanoidRootPart.CFrame)
+    end
+end})
+
+-- [[ TAB 3: HỆ THỐNG ]] --
+local TabSystem = Window:AddTab({ Name = "Hệ Thống", Icon = "rbxassetid://4483345998" })
+
+TabSystem:AddSlider("SpeedSlider", {
+    Title = "Tốc độ chạy",
+    Min = 16, Max = 150, Default = 24, Color = Color3.fromRGB(0, 255, 127), Increment = 1, Callback = function(s)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
+    end
+})
+
+TabSystem:AddButton({Name = "Đóng hoàn toàn Script", Callback = function()
+    Flux:Destroy()
+end})
+
+-- THÔNG BÁO CHÀO MỪNG
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "Yuta Hub VIP";
+    Text = "Chào mừng đã đến với bình nguyên vô tận :))";
+    Duration = 7;
+})
+
+Window:SelectTab(1) -- Tự động mở Tab đầu tiên
+print("YUTA HUB VIP LOADED SUCCESSFUL (VIP UI)!")
