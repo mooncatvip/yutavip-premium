@@ -1,0 +1,119 @@
+-- Moon Banana Hub (Roblox Only)
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+-- GUI
+local gui = Instance.new("ScreenGui")
+gui.Parent = player:WaitForChild("PlayerGui")
+gui.Name = "MoonBananaHub"
+
+-- Main
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.new(0, 520, 0, 320)
+main.Position = UDim2.new(0.3, 0, 0.3, 0)
+main.BackgroundColor3 = Color3.fromRGB(25,25,35)
+
+-- Sidebar
+local sidebar = Instance.new("Frame", main)
+sidebar.Size = UDim2.new(0,130,1,0)
+sidebar.BackgroundColor3 = Color3.fromRGB(35,35,55)
+
+-- Content
+local content = Instance.new("Frame", main)
+content.Size = UDim2.new(1,-130,1,0)
+content.Position = UDim2.new(0,130,0,0)
+content.BackgroundColor3 = Color3.fromRGB(30,30,45)
+
+-- Title
+local title = Instance.new("TextLabel", main)
+title.Size = UDim2.new(1,0,0,30)
+title.Text = "MOON HUB"
+title.TextColor3 = Color3.fromRGB(200,200,255)
+title.BackgroundTransparency = 1
+
+-- Tabs
+local tabs = {}
+
+function createTab(name, posY)
+    local btn = Instance.new("TextButton", sidebar)
+    btn.Size = UDim2.new(1,0,0,40)
+    btn.Position = UDim2.new(0,0,0,posY)
+    btn.Text = name
+    btn.BackgroundColor3 = Color3.fromRGB(50,50,80)
+    btn.TextColor3 = Color3.new(1,1,1)
+
+    local frame = Instance.new("Frame", content)
+    frame.Size = UDim2.new(1,0,1,0)
+    frame.Visible = false
+    frame.BackgroundTransparency = 1
+
+    tabs[name] = frame
+
+    btn.MouseButton1Click:Connect(function()
+        for _,f in pairs(tabs) do
+            f.Visible = false
+        end
+        frame.Visible = true
+    end)
+
+    return frame
+end
+
+-- Toggle
+function createToggle(parent, text, y, func)
+    local state = false
+
+    local btn = Instance.new("TextButton", parent)
+    btn.Size = UDim2.new(0,220,0,35)
+    btn.Position = UDim2.new(0,20,0,y)
+    btn.Text = text .. " OFF"
+    btn.BackgroundColor3 = Color3.fromRGB(70,70,120)
+    btn.TextColor3 = Color3.new(1,1,1)
+
+    btn.MouseButton1Click:Connect(function()
+        state = not state
+        btn.Text = text .. (state and " ON" or " OFF")
+
+        task.spawn(function()
+            func(function() return state end)
+        end)
+    end)
+end
+
+-- Tabs
+local farmTab = createTab("Farm", 0)
+local miscTab = createTab("Misc", 40)
+
+tabs["Farm"].Visible = true
+
+-- Auto Farm (demo)
+createToggle(farmTab, "Auto Farm", 20, function(isOn)
+    while isOn() do
+        task.wait(0.5)
+        print("farming...")
+    end
+end)
+
+-- FPS Boost
+createToggle(miscTab, "FPS Boost", 20, function(isOn)
+    while isOn() do
+        task.wait(2)
+        for _,v in pairs(workspace:GetDescendants()) do
+            if v:IsA("BasePart") then
+                v.Material = Enum.Material.Plastic
+                v.Reflectance = 0
+            end
+        end
+    end
+end)
+
+-- Speed
+createToggle(miscTab, "Speed 20", 70, function(isOn)
+    while isOn() do
+        task.wait(0.5)
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.WalkSpeed = 20
+        end
+    end
+end)
