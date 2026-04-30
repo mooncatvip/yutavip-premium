@@ -1,0 +1,134 @@
+-- DOORS VELOCITY: THE GENESIS ERROR - V39 (ULTIMATE COMPILATION)
+-- CHỨC NĂNG: SINH TỒN + THAO TÚNG + TỰ ĐỘNG HÓA + BẺ CONG THỰC TẠI
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("領域展開: GENESIS ERROR - V39", "BloodTheme")
+
+-- ==========================================
+-- 1. DOORS ESSENTIALS (DÀNH CHO CHƠI THẬT)
+-- ==========================================
+local MainTab = Window:NewTab("Doors Essentials")
+local MainSec = MainTab:NewSection("Bản Năng Sinh Tồn")
+
+MainSec:NewToggle("Auto Interact", "Tự nhặt chìa, mở cửa, gạt cần", function(state)
+    _G.AutoInt = state
+    spawn(function()
+        while _G.AutoInt do task.wait(0.1)
+            for _, v in pairs(workspace:GetDescendants()) do
+                if v:IsA("ProximityPrompt") then fireproximityprompt(v) end
+            end
+        end
+    end)
+end)
+
+MainSec:NewToggle("Entity ESP", "Hiện khung hình quái vật", function(state)
+    _G.ESP = state
+    spawn(function()
+        while _G.ESP do task.wait(1)
+            for _, v in pairs(workspace:GetDescendants()) do
+                if v:IsA("Model") and (v.Name:find("Rush") or v.Name:find("Seek") or v.Name == "Figure") then
+                    if not v:FindFirstChild("Highlight") then
+                        local h = Instance.new("Highlight", v)
+                        h.FillColor = Color3.new(1, 0, 0)
+                    end
+                end
+            end
+        end
+    end)
+end)
+
+-- ==========================================
+-- 2. THE SUPER JUNIOR (DÀNH CHO PHÁ GAME)
+-- ==========================================
+local JuniorTab = Window:NewTab("The Super Junior")
+local JSec = JuniorTab:NewSection("Néo Mó & Đảo Ngược")
+
+JSec:NewToggle("Infinite Dream (Néo Mó)", "Làm méo không gian và FOV", function(state)
+    _G.Dream = state
+    spawn(function()
+        while _G.Dream do
+            workspace.CurrentCamera.FieldOfView = math.random(60, 140)
+            task.wait(0.05)
+        end
+        workspace.CurrentCamera.FieldOfView = 70
+    end)
+end)
+
+JSec:NewButton("World Inversion", "Đảo ngược thế giới 180 độ", function()
+    workspace.CurrentCamera.CFrame = workspace.CurrentCamera.CFrame * CFrame.Angles(0, 0, math.rad(180))
+end)
+
+JSec:NewButton("Invoke Backrooms", "Xóa map cũ, nạp địa ngục xương máu", function()
+    pcall(function()
+        workspace.CurrentRooms:ClearAllChildren()
+        local Floor = Instance.new("Part", workspace)
+        Floor.Size = Vector3.new(10000, 1, 10000)
+        Floor.Anchored = true
+        Floor.Material = Enum.Material.CorrodedMetal
+        Floor.Color = Color3.fromRGB(100, 0, 0)
+        Floor.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 5, 0)
+        game.Lighting.Ambient = Color3.new(0.2, 0, 0)
+    end)
+end)
+
+-- ==========================================
+-- 3. THẦN KHÍ (VŨ KHÍ TỐI THƯỢNG)
+-- ==========================================
+local ToolTab = Window:NewTab("Thần Khí")
+local TSec = ToolTab:NewSection("Vũ Khí Xóa Sổ")
+
+TSec:NewButton("THE REDZ [V39: GENESIS]", "Kiếm tím quét sạch 1000m", function()
+    local Tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+    Tool.Name = "THE REDZ [V39]"
+    local h = Instance.new("Part", Tool)
+    h.Size = Vector3.new(1, 100, 1)
+    h.Material = Enum.Material.Neon
+    h.Color = Color3.new(1, 0, 1)
+    Tool.Activated:Connect(function()
+        for _, v in pairs(workspace:GetDescendants()) do
+            if v:IsA("Model") and (v:FindFirstChild("Humanoid") or v.Name:find("Rush")) then
+                if (v.PrimaryPart.Position - h.Position).Magnitude < 1000 then v:Destroy() end
+            end
+        end
+    end)
+end)
+
+TSec:NewToggle("The Frog: Reality Flatten", "Ép bẹp quái thành 2D", function(state)
+    _G.Frog = state
+    spawn(function()
+        while _G.Frog do task.wait(0.2)
+            for _, v in pairs(workspace:GetDescendants()) do
+                if v.Name == "Figure" or v.Name:find("Rush") then
+                    local hrp = v:FindFirstChild("HumanoidRootPart")
+                    if hrp then hrp.Size = Vector3.new(50, 0.1, 50) hrp.Anchored = true end
+                end
+            end
+        end
+    end)
+end)
+
+-- ==========================================
+-- 4. HỆ THỐNG (VELOCITY & WARP)
+-- ==========================================
+local SysTab = Window:NewTab("System")
+local SSec = SysTab:NewSection("Vận Hành Cực Hạn")
+
+SSec:NewSlider("Velo Overlord", "Tốc độ ánh sáng", 30000, 16, 30000, function(v)
+    local hrp = game.Players.LocalPlayer.Character.HumanoidRootPart
+    local bv = hrp:FindFirstChild("Velo") or Instance.new("BodyVelocity", hrp)
+    bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+    bv.Velocity = hrp.CFrame.LookVector * v
+end)
+
+SSec:NewSlider("Room Teleport", "Dịch chuyển đến phòng X", 100, 1, 100, function(v)
+    pcall(function()
+        local room = workspace.CurrentRooms:FindFirstChild(tostring(v))
+        if room then game.Players.LocalPlayer.Character:PivotTo(room:GetPivot()) end
+    end)
+end)
+
+SSec:NewButton("God Mode (Invisible)", "Vô hình hoàn toàn", function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 5, 0)
+    task.wait(0.1)
+    game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+end)
