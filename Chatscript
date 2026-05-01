@@ -1,0 +1,74 @@
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+
+-- Tạo UI nhập liệu riêng để né cái bảng cấm chat trong ảnh Screenshot_20260501-124014.jpg
+local ScreenGui = Instance.new("ScreenGui", game:CoreGui)
+local ChatFrame = Instance.new("Frame", ScreenGui)
+ChatFrame.Size = UDim2.new(0, 300, 0, 45)
+ChatFrame.Position = UDim2.new(0.5, -150, 0.8, 0) -- Đặt gần dưới để dễ nhìn
+ChatFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+ChatFrame.BackgroundTransparency = 0.4
+ChatFrame.Visible = false
+
+local TextBox = Instance.new("TextBox", ChatFrame)
+TextBox.Size = UDim2.new(1, -10, 1, -10)
+TextBox.Position = UDim2.new(0, 5, 0, 5)
+TextBox.BackgroundTransparency = 1
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.Font = Enum.Font.SourceSansBold
+TextBox.TextSize = 20
+TextBox.PlaceholderText = "Nhập nội dung (Không chặn ###)..."
+TextBox.Text = ""
+
+-- Hàm tạo bong bóng chat bằng BillboardGui
+local function createNoFilterBubble(text)
+    local char = LocalPlayer.Character
+    if not char or not char:FindFirstChild("Head") then return end
+
+    -- Xóa bong bóng cũ
+    if char.Head:FindFirstChild("GlobalFakeChat") then
+        char.Head.GlobalFakeChat:Destroy()
+    end
+
+    local bbg = Instance.new("BillboardGui", char.Head)
+    bbg.Name = "GlobalFakeChat"
+    bbg.Size = UDim2.new(0, 250, 0, 60)
+    bbg.Adornee = char.Head
+    bbg.StudsOffset = Vector3.new(0, 3.5, 0) -- Hiện trên đầu nhân vật
+    bbg.AlwaysOnTop = true
+
+    local label = Instance.new("TextLabel", bbg)
+    label.Size = UDim2.new(1, 0, 1, 0)
+    label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    label.BackgroundTransparency = 0.1
+    label.Text = text -- Đây là TextLabel nên Roblox ít khi tự động sweep thành ### ngay lập tức
+    label.TextColor3 = Color3.fromRGB(0, 0, 0)
+    label.TextScaled = true
+    label.Font = Enum.Font.SourceSansBold
+    
+    local corner = Instance.new("UICorner", label)
+    corner.CornerRadius = UDim.new(0, 10)
+
+    -- Hiệu ứng biến mất sau 6 giây
+    task.delay(6, function()
+        if bbg then bbg:Destroy() end
+    end)
+end
+
+-- Điều khiển bằng phím /
+UserInputService.InputBegan:Connect(function(input, processed)
+    if not processed and input.KeyCode == Enum.KeyCode.Slash then
+        ChatFrame.Visible = true
+        TextBox:CaptureFocus()
+        task.wait()
+        TextBox.Text = ""
+    end
+end)
+
+TextBox.FocusLost:Connect(function(enter)
+    if enter and TextBox.Text ~= "" then
+        createNoFilterBubble(TextBox.Text)
+    end
+    ChatFrame.Visible = false
+end)
